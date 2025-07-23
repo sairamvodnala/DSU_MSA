@@ -1,0 +1,343 @@
+---
+title: "9 Additional Graphs Homework"
+author: "Sai Ram Vodnala"
+date: "07-25-2024"
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+
+# Instructions
+
+There are four exercises below, each worth 10 points, and are labelled (Either R, Python or Julia). For these exercises, you can implement a solution in the language of your choice. I've included code chunk templates for all three languages, but you only need to fill in the chunks for one language.
+
+There is no exercise requiring all three languages, instead, there will be an additional bonus 10 points added for this exercises.
+
+Some of the exercises have questions relating to the results. Write your answers in the narrative part of the text, formatted as *italicized* text, **bold** text or
+
+> quoted text.
+
+Submit both `Rmd` and typeset results using file name formats as in previous exercises.
+
+For this exercise, you may use whatever graphics library you desire.
+
+# Exercise 1. (Either R, Python or Julia)
+
+A few years ago, I was interested in how well different ranking systems performed for predicting performance of NCAA D1 wrestlers. One system used the metric **ELO** (see, for example, https://www.researchgate.net/publication/307614860_Ranking_and_prediction_of_collegiate_wrestling ). I created a data file with the results of the NCAA 2018 National Tournament, plus additional wrestlers who did not qualify for the national tournament, but whose ELO scores predicted tournament qualification. These data were save as `ncaa2018.csv`.
+
+For this exercise, load the `ncaa2018.csv` data set and create histograms, QQ-norm and box-whisker plots for `ELO` column. Add a title to each plot, identifying the data. Would you expect these data to be normally distributed? Do the graphs support your expectation?
+
+*ELO scores suggest that the data is not normally distributed because a normal distribution would appear as a symmetric bell-shaped curve. The histogram reveals a right-skewed distribution with most scores concentrated around 1350 to 1400 and fewer high scores, indicating an uneven spread. The QQ plot confirms this skewness by showing that the data's extreme values don't fit well within the expected range of a normal distribution. Similarly, the box-whisker plot highlights right skew with several high outliers and a median that is not centered, all of which together suggest that the ELO scores are not normally distributed.*
+
+### R
+```{r}
+data <- read.csv("C:/Users/sairam/Desktop/Stat600/0.files/HOMEWORKS/HW9/ncaa2018.csv")
+
+hist(data$ELO, main = "Histogram of NCAA D1 Wrestlers' ELO Scores", xlab = "ELO Score", col = "lightblue", border = "black")
+
+qqnorm(data$ELO, main = "ELO QQ-Norm Plot")
+qqline(data$ELO)
+
+boxplot(data$ELO, main = "Box-Whisker Plot", ylab = "ELO Score", col = "lightgreen", border = "black")
+
+```
+
+### Python
+```{python}
+```
+
+### Julia
+
+```{julia,}
+```
+
+
+# Exercise 2. (Either R, Python or Julia)
+
+Review Exercise 1, Homework 6, where you calculated skewness and kurtosis. The reference for this exercise, https://www.itl.nist.gov/div898/handbook/eda/section3/eda35b.htm, 
+
+> The following example shows histograms for 10,000 random numbers generated from a normal, a double exponential, a Cauchy, and a Weibull distribution.
+
+We will reproduce the histograms for these samples, and add qqnorm and box-whisker plots.
+
+## Part a
+
+Use the code below from lecture to draw 10000 samples from the normal distribution.
+
+Look up the corresponding `r*` functions in R for the Cauchy distribution (use location=0, scale=1), and the Weibull distribution (use shape = 1.5). For the double exponential, use you can use the `*laplace` functions from the `rmutil` library, or you can use `rexp(10000) - rexp(10000)`. 
+
+If you choose Python, you'll need to look up the corresponding `numpy.random.*` functions. Unlike R, `numpy` provides an explicitly named `laplace` distribution. If you choose Julia, you will need to lookup Cauchy, Laplace and Weibull in the Distributions library.
+
+Draw 10000 samples from each of these distributions. Calculate skewness and kurtosis for each sample. You may use your own function from the previous homework, or use the `moments` library in R, or `scipy` functions in Python, or `StatsBase` functions in Julia.
+
+### R
+
+```{r}
+library(moments)
+set.seed(27)
+normal_samples <- rnorm(10000)
+cauchy_samples <- rcauchy(10000, location = 0, scale = 1)
+laplace_samples <- rexp(10000) - rexp(10000)
+weibull_samples <- rweibull(10000, shape = 1.5)
+
+print("Skweness & Kurtosis For Normal Distribution")
+skew_kurt_normal <- c(skewness(normal_samples), kurtosis(normal_samples))
+skew_kurt_normal
+
+print("Skweness & Kurtosis For Double Exponential Distribution")
+skew_kurt_laplace <- c(skewness(laplace_samples), kurtosis(laplace_samples))
+skew_kurt_laplace
+
+print("Skweness & Kurtosis For Cauchy Distribution")
+skew_kurt_cauchy <- c(skewness(cauchy_samples), kurtosis(cauchy_samples))
+skew_kurt_cauchy
+
+print("Skweness & Kurtosis For Weibull Distribution")
+skew_kurt_weibull <- c(skewness(weibull_samples), kurtosis(weibull_samples))
+skew_kurt_weibull
+
+
+```
+
+### Python
+
+```{python}
+```
+
+### Julia
+
+```{julia}
+```
+
+## Part b
+
+Plot the histograms for each distribution. Use `par(mfrow=c(2,2))` in your code chunk to combine the four histogram in a single plot in a 2x2 grid, or equivalent code in Python and Julia (see `4 Arrays.Rpres` for examples). Add titles to the histograms indicating the distribution. Set the x-axis label to show the calculated skewness and kurtosis, i.e. `skewness = ###, kurtosis = ###`. Format the skewness and kurtosis to show 2-4 significant digits. 
+
+### R
+```{r}
+par(mfrow = c(2, 2))
+
+hist(normal_samples, main = "Normal Distribution", xlab = sprintf("skewness = %.4f, kurtosis = %.4f", skew_kurt_normal[1], skew_kurt_normal[2]), col = "lightblue")
+
+hist(laplace_samples, main = "Double Exponential Distribution", xlab = sprintf("skewness = %.2f, kurtosis = %.4f", skew_kurt_laplace[1], skew_kurt_laplace[2]), col = "lightyellow")
+
+hist(cauchy_samples, main = "Cauchy Distribution", xlab = sprintf("skewness = %.2f, kurtosis = %.2f", skew_kurt_cauchy[1], skew_kurt_cauchy[2]), col = "lightgreen")
+
+hist(weibull_samples, main = "Weibull Distribution", xlab = sprintf("skewness = %.2f, kurtosis = %.2f", skew_kurt_weibull[1], skew_kurt_weibull[2]), col = "lightcoral")
+
+```
+
+### Python
+```{python}
+```
+
+### Julia
+
+```{julia}
+```
+
+## Part c
+Repeat Part b, but with QQ-norm plots.
+
+### R
+```{r}
+par(mfrow = c(2, 2))
+
+qqnorm(normal_samples, main = "Normal Distribution",xlab = sprintf("skewness = %.4f, kurtosis = %.4f", skew_kurt_normal[1], skew_kurt_normal[2]), col = "blue")
+qqline(normal_samples, col = "red")
+
+qqnorm(laplace_samples, main = "Double Exponential",xlab = sprintf("skewness = %.2f, kurtosis = %.4f", skew_kurt_laplace[1], skew_kurt_laplace[2]), col = "yellow")
+qqline(laplace_samples, col = "blue")
+
+qqnorm(cauchy_samples, main = "Cauchy Distribution",xlab = sprintf("skewness = %.2f, kurtosis = %.2f", skew_kurt_cauchy[1], skew_kurt_cauchy[2]), col = "green")
+qqline(cauchy_samples, col = "yellow")
+
+qqnorm(weibull_samples, main = "Weibull Distribution",xlab = sprintf("skewness = %.2f, kurtosis = %.2f", skew_kurt_weibull[1], skew_kurt_weibull[2]), col = "red")
+qqline(weibull_samples, col = "green")
+
+```
+
+### Python
+```{python}
+```
+
+### Julia
+
+```{julia}
+```
+
+## Part d
+
+Repeat Part b, but with box-whisker plots.
+
+### R
+```{r}
+par(mfrow = c(2, 2))
+
+boxplot(normal_samples, main = "Normal Distribution",xlab = sprintf("skewness = %.4f, kurtosis = %.4f", skew_kurt_normal[1], skew_kurt_normal[2]), col = "lightblue")
+
+boxplot(laplace_samples, main = "Laplace Distribution",xlab = sprintf("skewness = %.2f, kurtosis = %.4f", skew_kurt_laplace[1], skew_kurt_laplace[2]), col = "lightyellow")
+
+boxplot(cauchy_samples, main = "Cauchy Distribution",xlab = sprintf("skewness = %.2f, kurtosis = %.2f", skew_kurt_cauchy[1], skew_kurt_cauchy[2]), col = "lightgreen")
+
+
+
+boxplot(weibull_samples, main = "Weibull Distribution",xlab = sprintf("skewness = %.2f, kurtosis = %.2f", skew_kurt_weibull[1], skew_kurt_weibull[2]), col = "lightcoral")
+
+```
+
+### Python
+```{python}
+```
+
+### Julia
+
+```{julia}
+```
+
+## Exercise 3. (Either R, Python or Julia)
+
+We will create a series of graphs illustrating how the Poisson distribution approaches the normal distribution with large $\lambda$. (See http://wiki.stat.ucla.edu/socr/index.php/AP_Statistics_Curriculum_2007_Limits_Norm2Poisson) We will iterate over a sequence of `lambda`, from 2 to 128, doubling `lambda` each time; that is, `lambda =  2,4,8,16,32,64,128` . For each `lambda` value, draw 1000 samples from the Poisson distribution (i.e. use `rpois` in R, or the equivalents in Python or Julia). 
+
+Calculate the skewness of each set of samples, and produce histograms, QQ-norm and box-whisker plots. You can use `par(mfrow=c(1,3))`, or similar code for Python and Julia, to display all three plots for one `lambda` value in a single line. Add `lambda=##` to the title of the histogram, and `skewness=##` to the title of the box-whisker plot.
+
+### R
+
+```{r}
+lambda_values <- c(2, 4, 8, 16, 32, 64, 128)
+
+num_samples <- 1000
+
+skewness_values <- numeric(length(lambda_values))
+
+
+par(mfrow = c(1, 3))
+
+for (i in seq_along(lambda_values)) {
+  lambda <- lambda_values[i]
+  samples <- rpois(num_samples, lambda)
+  skewness_values[i] <- skewness(samples)
+  hist(samples, main = paste0("Histogram (lambda=", lambda, ")"))
+
+  qqnorm(samples, main = paste0("QQ-norm Plot"))
+  qqline(samples)
+
+  boxplot(samples, main = paste0("Box-Whisker (skewness=", round(skewness_values[i], 2), ")"))
+}
+lambda_normal <- lambda_values[which.max(abs(skewness_values) < 0.2)]
+lambda_normal
+
+```
+
+### Python
+
+```{python}
+```
+
+### Julia
+
+```{julia}
+```
+
+At what `lambda` is skewness of the Poisson distribution small enough to be considered normal? You may use a formal test (i.e. `agostino.test` in R), or you may simply use skewness and kurtosis values and visual inspection of the plots.
+
+
+*As the lambda value in the Poisson distribution increases, the skewness decreases, making the distribution more symmetric and similar to a normal distribution. This trend is noticeable from lambda=8, but it becomes more pronounced at higher values. By the time lambda reaches 64, with a skewness of 0.25, the distribution starts to resemble a normal distribution closely. The clearest indication of this is at lambda=128, where the skewness further drops to 0.11. This low skewness, combined with the alignment seen in the QQ plots, suggests that by lambda=128, the Poisson distribution is symmetrical enough to be considered normally distributed.*
+
+
+# Exercise 4 (R, Python or Julia)
+
+## Part a
+
+Define a function `PlotHistograms` that accepts as arguments a vector `vec`, a vector of integers `bins`, a main title label and an $x$-axis label. This function should 
+1. iterate over each element $i$ in `bins` 
+2. produce a histogram for `vec`, setting the number of bins in the histogram to value given by `bins[i]`
+3. label the histogram's main and x-axis with arguments to `PlotHistograms` 
+4. label the y-axis to read `Frequency, bins =` and the number of bins.
+
+If `bins` is of length 5, then your function will plot 5 distinct histograms. This will allow you to explore how the choice of bin number affects visual interpretation of a histogram.
+
+This function can be written simply in R, with one loop. In Python, I find it requires several lines to set axis titles and labels. Julia will require calling `display(current())` inside the main loop to display each associated histogram.
+
+### R
+```{r}
+#function definition
+PlotHistograms <- function(vec, bins, main_title, x_axis_label) {
+  for (num_bins in bins) {
+    hist(vec, breaks = num_bins, main = main_title, xlab = x_axis_label,
+         ylab = paste("Frequency, bins =", num_bins))
+  }
+}
+
+```
+
+### Python
+```{python}
+#function definition
+import matplotlib.pyplot as plt
+
+def PlotHistograms(vec, bins, main_title, x_axis_label):
+    for num_bins in bins:
+        plt.hist(vec, bins=num_bins)
+        plt.title(main_title)
+        plt.xlabel(x_axis_label)
+        plt.ylabel(f"Frequency, bins = {num_bins}")
+        plt.show()
+
+```
+
+### Julia
+```{julia}
+#function definition
+```
+
+## Part b
+
+Test your function with the `hidalgo` data set (see below), using bin numbers 12, 36, and 60. You should be able to call your function with something like (in R)
+```
+PlotHistograms(hidalgo.dat[,1],c(12,36,60), main="1872 Hidalgo issue", xlab= "Thickness (mm)")
+```
+to plot three different histograms of the `hidalgo` data set.
+
+## Data
+
+The `hidalgo` data set is in the file `hidalgo.dat` These data consist of a single column, recording paper thickness measurements of stamps from the 1872 Hidalgo issue of Mexico. This data set is commonly used to illustrate methods of determining the number of components in a mixture (in this case, different batches of paper). See https://www.jstor.org/stable/2290118,  
+https://books.google.com/books?id=1CuznRORa3EC&lpg=PA95&pg=PA94#v=onepage&q&f=false and https://books.google.com/books?id=c2_fAox0DQoC&pg=PA180&lpg=PA180&f=false
+.
+
+Some analysis suggest there are three different mixtures of paper used to produce the 1872 Hidalgo issue; other analysis suggest 3. Why do you think there might be disagreement about the number of mixtures?
+
+
+*There seems to be a difference in opinion about how many mixtures are shown in the histograms. The first histogram shows three peaks, which suggests there are three mixtures. However, another histogram with 60 bins shows over ten peaks, suggesting there could be more than ten mixtures.*
+
+### R
+```{r}
+# Read the data from the file
+hidalgo_data <- scan("C:/Users/sairam/Desktop/Stat600/0.files/HOMEWORKS/HW9/hidalgo.dat")
+
+# Values of bins to explore
+bin_values <- c(12, 36, 60)
+
+# Call the function
+PlotHistograms(hidalgo_data, bin_values, main = "1872 Hidalgo issue", x_axis_label = "Thickness (mm)")
+
+```
+
+### Python
+```{python}
+import numpy as np
+hidalgo_data = np.loadtxt('C:/Users/sairam/Desktop/Stat600/0.files/HOMEWORKS/HW9/hidalgo.dat')
+
+# Values of bins to explore
+bin_values = [12, 36, 60]
+
+# Call the function
+PlotHistograms(hidalgo_data, bin_values, "1872 Hidalgo issue", "Thickness (mm)")
+
+```
+
+### Julia
+
+```{julia}
+```

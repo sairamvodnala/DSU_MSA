@@ -1,0 +1,474 @@
+---
+title: "Project_2"
+author: "SAI RAM VODNALA"
+date: "2024-11-09"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Data Preparation
+
+**EXCEL**
+
+Removed the empty rows (35,14,22) and duplicate(29 multiplex) in data for multiplex, subterraneus and unknown sheets in excel. And changed column names then converted to CSV format.
+
+## Exploratory Data Analysis
+
+**R**
+
+```{r}
+#Importing the data sets
+multiplex <- read.csv("Multiplex1.csv")
+subterraneus <- read.csv("Subterraneus1.csv")
+unknown <- read.csv("Unknown1.csv")
+```
+
+```{r}
+#checking the top rows
+head(multiplex)
+head(subterraneus)
+head(unknown)
+```
+
+```{r}
+# Checking missing values
+sum(is.na(multiplex))
+sum(is.na(subterraneus))
+```
+
+```{r}
+#checking the structure and data types
+str(multiplex)
+str(subterraneus)
+str(unknown)
+```
+```{r}
+summary(multiplex)
+summary(subterraneus)
+```
+
+```{r}
+#creating boxplots to find ouliers for Multiplex
+library(ggplot2)
+
+# Prepare data by melting it into long format for easy faceting
+multiplex_long <- reshape2::melt(multiplex, id.vars = "vole_skull_index", measure.vars = c("skull_length", "skull_height", "skull_width"))
+
+# Create box plots for all features
+ggplot(multiplex_long, aes(x = variable, y = value, fill = variable)) +
+  geom_boxplot(outlier.colour = "red", outlier.shape = 1) +  # Red color for outliers
+  scale_fill_brewer(palette = "Pastel1") +  # Colorful boxes using a pastel palette
+  facet_wrap(~ variable, scales = "free_y") +  # Separate plots for each feature
+  labs(title = "Box Plots of Multiplex Skull Measurements", x = "Measurement Type", y = "Measurement Value (0.01mm)") +
+  theme_minimal() +
+  theme(legend.position = "none",  # Hide legend since color distinguishes the features
+        axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x labels for clarity
+
+```
+
+```{r}
+#Creating Density charts to know distribution of a column values for Multiplex
+library(ggplot2)
+
+# Density plot for 'skull_length' in the multiplex dataset
+p1_multiplex <- ggplot(multiplex, aes(x = skull_length)) + 
+  geom_density(fill = "blue", alpha = 0.5) +
+  labs(title = "Density of Skull Length - Multiplex", x = "Skull Length", y = "Density") +
+  theme_minimal()
+
+# Density plot for 'skull_height' in the multiplex dataset
+p2_multiplex <- ggplot(multiplex, aes(x = skull_height)) + 
+  geom_density(fill = "red", alpha = 0.5) +
+  labs(title = "Density of Skull Height - Multiplex", x = "Skull Height", y = "Density") +
+  theme_minimal()
+
+# Density plot for 'skull_width' in the multiplex dataset
+p3_multiplex <- ggplot(multiplex, aes(x = skull_width)) + 
+  geom_density(fill = "green", alpha = 0.5) +
+  labs(title = "Density of Skull Width - Multiplex", x = "Skull Width", y = "Density") +
+  theme_minimal()
+
+# Display the plots
+gridExtra::grid.arrange(p1_multiplex, p2_multiplex, p3_multiplex, ncol = 3)
+
+
+
+```
+The box plot and density plot show how the skull measurements—length, height, and width—vary for a species known as "Multiplex." Both skull length and height have a moderate spread with some rare, extreme values. In particular, skull width shows more variability, with values that frequently stray far from the average, both lower and higher. The density plots support this, showing that most skulls have lengths and heights close to a common middle value, but skull width varies more widely across different skulls. This broader variation in width is reflected in a spread-out pattern in its density plot, suggesting that skull width is a more diverse trait within this species.
+
+```{r}
+library(ggplot2)
+#creating boxplots to find ouliers for subterraneus
+
+# Prepare data by melting it into long format for easy faceting
+subterraneus_long <- reshape2::melt(subterraneus, id.vars = "vole_skull_index", measure.vars = c("skull_length", "skull_height", "skull_width"))
+
+# Create box plots for all features
+ggplot(subterraneus_long, aes(x = variable, y = value, fill = variable)) +
+  geom_boxplot(outlier.colour = "red", outlier.shape = 1) +  # Red color for outliers
+  scale_fill_brewer(palette = "Pastel1") +  # Colorful boxes using a pastel palette
+  facet_wrap(~ variable, scales = "free_y") +  # Separate plots for each feature
+  labs(title = "Box Plots of subterraneus Skull Measurements", x = "Measurement Type", y = "Measurement Value (0.01mm)") +
+  theme_minimal() +
+  theme(legend.position = "none",  # Hide legend since color distinguishes the features
+        axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x labels for clarity
+
+
+
+
+```
+
+```{r}
+#Creating Density charts to know distribution of a column values for subterraneus
+library(ggplot2)
+
+# Density plot for 'skull_length' in the subterraneus dataset
+p1_subterraneus <- ggplot(subterraneus, aes(x = skull_length)) + 
+  geom_density(fill = "blue", alpha = 0.5) +
+  labs(title = "Density of Skull Length - subterraneus", x = "Skull Length", y = "Density") +
+  theme_minimal()
+
+# Density plot for 'skull_height' in the subterraneus dataset
+p2_subterraneus <- ggplot(subterraneus, aes(x = skull_height)) + 
+  geom_density(fill = "red", alpha = 0.5) +
+  labs(title = "Density of Skull Height - subterraneus", x = "Skull Height", y = "Density") +
+  theme_minimal()
+
+# Density plot for 'skull_width' in the subterraneus dataset
+p3_subterraneus <- ggplot(subterraneus, aes(x = skull_width)) + 
+  geom_density(fill = "green", alpha = 0.5) +
+  labs(title = "Density of Skull Width - subterraneus", x = "Skull Width", y = "Density") +
+  theme_minimal()
+
+# Display the plots
+gridExtra::grid.arrange(p1_subterraneus, p2_subterraneus, p3_subterraneus, ncol = 3)
+
+```
+box plots and density plots for Subterraneus skull measurements reveal significant outliers and extreme variability, particularly in skull length and height. The box plots show that while the median values for skull height and width are within a more typical range, the lengths and heights have extreme outliers far beyond the norm, with skull length outliers over 20,000 and skull height exceeding 8,000. The density plots confirm this distribution, displaying sharp peaks at lower values for height and width, indicating a concentration of most data at these levels, but with skull length showing a drastic spread, indicative of possible measurement errors or extraordinary specimens.
+
+so we need to handle the outliers –> setting them to the 97.5th percentile value. Upper bound set to 97.5th percentile Lower bound set to 2.5th percentile
+```{r}
+# Calculate lower and upper bounds for x, y, and z
+lower_bound_x <- quantile(multiplex[[3]], 0.025)
+upper_bound_x <- quantile(multiplex[[3]], 0.975)
+
+lower_bound_y <- quantile(multiplex[[4]], 0.025)
+upper_bound_y <- quantile(multiplex[[4]], 0.975)
+
+lower_bound_z <- quantile(multiplex[[5]], 0.025)
+upper_bound_z <- quantile(multiplex[[5]], 0.975)
+
+# Replace values outside the bounds for x, y, and z
+multiplex[[3]][multiplex[[3]] < lower_bound_x] <- lower_bound_x
+multiplex[[3]][multiplex[[3]] > upper_bound_x] <- upper_bound_x
+
+multiplex[[4]][multiplex[[4]] < lower_bound_y] <- lower_bound_y
+multiplex[[4]][multiplex[[4]] > upper_bound_y] <- upper_bound_y
+
+multiplex[[5]][multiplex[[5]] < lower_bound_z] <- lower_bound_z
+multiplex[[5]][multiplex[[5]] > upper_bound_z] <- upper_bound_z
+
+
+# Calculate lower and upper bounds for x, y, and z
+lower_bound_x <- quantile(subterraneus[[3]], 0.025)
+upper_bound_x <- quantile(subterraneus[[3]], 0.975)
+
+lower_bound_y <- quantile(subterraneus[[4]], 0.025)
+upper_bound_y <- quantile(subterraneus[[4]], 0.975)
+
+lower_bound_z <- quantile(subterraneus[[5]], 0.025)
+upper_bound_z <- quantile(subterraneus[[5]], 0.975)
+
+# Replace values outside the bounds for x, y, and z
+subterraneus[[3]][subterraneus[[3]] < lower_bound_x] <- lower_bound_x
+subterraneus[[3]][subterraneus[[3]] > upper_bound_x] <- upper_bound_x
+
+subterraneus[[4]][subterraneus[[4]] < lower_bound_y] <- lower_bound_y
+subterraneus[[4]][subterraneus[[4]] > upper_bound_y] <- upper_bound_y
+
+subterraneus[[5]][subterraneus[[5]] < lower_bound_z] <- lower_bound_z
+subterraneus[[5]][subterraneus[[5]] > upper_bound_z] <- upper_bound_z
+
+
+```
+
+```{r}
+# Check the structure and summary of the cleaned data
+multiplex_clean <- multiplex
+subterraneus_clean <- subterraneus
+summary(multiplex_clean)
+summary(subterraneus_clean)
+
+
+```
+
+```{r}
+# Check the structure and summary of the cleaned data
+summary(multiplex_clean)
+summary(subterraneus_clean)
+
+```
+
+```{r}
+library(ggplot2)
+
+# Prepare data by melting it into long format for easy faceting
+multiplex_clean_long <- reshape2::melt(multiplex_clean, id.vars = "vole_skull_index", measure.vars = c("skull_length", "skull_height", "skull_width"))
+
+# Create box plots for all features
+ggplot(multiplex_clean_long, aes(x = variable, y = value, fill = variable)) +
+  geom_boxplot(outlier.colour = "red", outlier.shape = 1) +  # Red color for outliers
+  scale_fill_brewer(palette = "Pastel1") +  # Colorful boxes using a pastel palette
+  facet_wrap(~ variable, scales = "free_y") +  # Separate plots for each feature
+  labs(title = "Box Plots of Multiplex_Clean Skull Measurements", x = "Measurement Type", y = "Measurement Value (0.01mm)") +
+  theme_minimal() +
+  theme(legend.position = "none",  # Hide legend since color distinguishes the features
+        axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x labels for clarity
+```
+
+```{r}
+library(ggplot2)
+
+# Density plot for 'skull_length' in the multiplex_clean dataset
+p1_multiplex_clean <- ggplot(multiplex_clean, aes(x = skull_length)) + 
+  geom_density(fill = "blue", alpha = 0.5) +
+  labs(title = "Density of Skull Length - multiplex_clean", x = "Skull Length", y = "Density") +
+  theme_minimal()
+
+# Density plot for 'skull_height' in the multiplex_clean dataset
+p2_multiplex_clean <- ggplot(multiplex_clean, aes(x = skull_height)) + 
+  geom_density(fill = "red", alpha = 0.5) +
+  labs(title = "Density of Skull Height - multiplex_clean", x = "Skull Height", y = "Density") +
+  theme_minimal()
+
+# Density plot for 'skull_width' in the multiplex_clean dataset
+p3_multiplex_clean <- ggplot(multiplex_clean, aes(x = skull_width)) + 
+  geom_density(fill = "green", alpha = 0.5) +
+  labs(title = "Density of Skull Width - multiplex_clean", x = "Skull Width", y = "Density") +
+  theme_minimal()
+
+# Display the plots
+gridExtra::grid.arrange(p1_multiplex_clean, p2_multiplex_clean, p3_multiplex_clean, ncol = 3)
+
+
+
+```
+
+```{r}
+library(ggplot2)
+
+# Prepare data by melting it into long format for easy faceting
+subterraneus_clean_long <- reshape2::melt(subterraneus_clean, id.vars = "vole_skull_index", measure.vars = c("skull_length", "skull_height", "skull_width"))
+
+# Create box plots for all features
+ggplot(subterraneus_clean_long, aes(x = variable, y = value, fill = variable)) +
+  geom_boxplot(outlier.colour = "red", outlier.shape = 1) +  # Red color for outliers
+  scale_fill_brewer(palette = "Pastel1") +  # Colorful boxes using a pastel palette
+  facet_wrap(~ variable, scales = "free_y") +  # Separate plots for each feature
+  labs(title = "Box Plots of subterraneus_clean Skull Measurements", x = "Measurement Type", y = "Measurement Value (0.01mm)") +
+  theme_minimal() +
+  theme(legend.position = "none",  # Hide legend since color distinguishes the features
+        axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x labels for clarity
+
+```
+
+```{r}
+library(ggplot2)
+
+# Density plot for 'skull_length' in the subterraneus_clean dataset
+p1_subterraneus_clean <- ggplot(subterraneus_clean, aes(x = skull_length)) + 
+  geom_density(fill = "blue", alpha = 0.5) +
+  labs(title = "Density of Skull Length - subterraneus_clean", x = "Skull Length", y = "Density") +
+  theme_minimal()
+
+# Density plot for 'skull_height' in the subterraneus_clean dataset
+p2_subterraneus_clean <- ggplot(subterraneus_clean, aes(x = skull_height)) + 
+  geom_density(fill = "red", alpha = 0.5) +
+  labs(title = "Density of Skull Height - subterraneus_clean", x = "Skull Height", y = "Density") +
+  theme_minimal()
+
+# Density plot for 'skull_width' in the subterraneus_clean dataset
+p3_subterraneus_clean <- ggplot(subterraneus_clean, aes(x = skull_width)) + 
+  geom_density(fill = "green", alpha = 0.5) +
+  labs(title = "Density of Skull Width - subterraneus_clean", x = "Skull Width", y = "Density") +
+  theme_minimal()
+
+# Display the plots
+gridExtra::grid.arrange(p1_subterraneus_clean, p2_subterraneus_clean, p3_subterraneus_clean, ncol = 3)
+
+
+
+```
+
+```{r}
+# Specify the file path and save the multiplex_clean dataset as a CSV file
+write.csv(multiplex_clean, "multiplex_clean.csv", row.names = FALSE)
+
+# Specify the file path and save the subterraneus_clean dataset as a CSV file
+write.csv(subterraneus_clean, "subterraneus_clean.csv", row.names = FALSE)
+
+```
+
+```{r}
+library(dplyr)
+# Merge the datasets
+combined_data <- bind_rows(multiplex_clean, subterraneus_clean)
+combined_data <- combined_data[, -1]
+combined_data <- combined_data[, c("skull_length", "skull_height", "skull_width", "chromosomal_analysis_ID")]
+
+
+# Save the combined dataset to a CSV file
+write.csv(combined_data, "combined_data.csv", row.names = FALSE)
+```
+
+```{r}
+library(dplyr)      # For data manipulation
+library(ggplot2)    # For creating visualizations
+library(gridExtra)  # For arranging multiple plots
+
+```
+
+```{r}
+summary(combined_data)
+```
+## Training the data using CV
+Now we use cross validation with 10 fold as a function to train and test the model.
+```{R}
+#creating seven feature combinations to develop glm models
+library(caret)
+combined_data$chromosomal_analysis_ID <- as.factor(combined_data$chromosomal_analysis_ID)
+
+# Define feature combinations
+feature_combinations <- list(
+  c("skull_length", "skull_height", "skull_width"), # Model with three features
+  c("skull_length", "skull_height"),                # Model with Length and Height
+  c("skull_length", "skull_width"),                 # Model with Length and Rostrum
+  c("skull_height", "skull_width"),                 # Model with Height and Rostrum
+  c("skull_length"),                                # Model with Length only
+  c("skull_height"),                                # Model with Height only
+  c("skull_width")                                  # Model with Rostrum only
+)
+
+```
+
+```{R}
+#Training seven models
+cv_results <- list()
+
+for (i in seq_along(feature_combinations)) {
+  # Define the formula based on feature combinations
+  formula <- as.formula(paste("chromosomal_analysis_ID ~", paste(feature_combinations[[i]], collapse = "+")))
+  
+  # Set up cross-validation
+  train_control <- trainControl(method = "cv", number = 10, classProbs = TRUE, savePredictions = "final")
+  
+  # Train the model using cross-validation
+  cv_model <- train(formula, data = combined_data, method = "glm", family = binomial(), trControl = train_control)
+  
+  # Store results
+  cv_results[[i]] <- cv_model
+}
+
+```
+
+```{R}
+# Print results from seven models
+for (i in seq_along(cv_results)) {
+  cat("\nResults for Model", i, "using Cross-Validation:\n")
+  
+  print(cv_results[[i]])
+  print(summary(cv_results[[i]]))
+}
+```
+##Predicting the unknown data
+Making unknown data into seven subsets files based on features to test with their respective model.
+
+```{r}
+# Define all possible columns in the dataset for reference
+all_columns <- c("skull_length", "skull_height", "skull_width")
+
+# Define the feature combinations
+feature_combinations <- list(
+  c("skull_length", "skull_height", "skull_width"), # Model with three features
+  c("skull_length", "skull_height"),                # Model with Length and Height
+  c("skull_length", "skull_width"),                 # Model with Length and Rostrum
+  c("skull_height", "skull_width"),                 # Model with Height and Rostrum
+  c("skull_length"),                                # Model with Length only
+  c("skull_height"),                                # Model with Height only
+  c("skull_width")                                  # Model with Rostrum only
+)
+
+# Process each feature combination
+for (i in seq_along(feature_combinations)) {
+  # Select only the relevant columns for this model
+  data_subset <- unknown[, feature_combinations[[i]], drop = FALSE]
+
+  # Identify non-relevant columns for this combination
+  non_relevant_columns <- setdiff(all_columns, feature_combinations[[i]])
+
+  # Filter out rows where any of the non-relevant columns are not NA
+  if (length(non_relevant_columns) > 0) {
+    # Ensure that the subset operation does not drop dimensions, even if it's a single column
+    temp_non_rel_data <- unknown[, non_relevant_columns, drop = FALSE]
+    data_subset <- data_subset[rowSums(!is.na(temp_non_rel_data)) == 0, , drop = FALSE]
+  }
+
+  # Remove rows with any NAs in the relevant columns, ensuring data_subset stays as a dataframe
+  if(ncol(data_subset) > 0) {
+    data_subset <- data_subset[complete.cases(data_subset), , drop = FALSE]
+  }
+
+  # Check if the dataframe is empty or has been reduced incorrectly
+  if (ncol(data_subset) > 0 && nrow(data_subset) > 0) {
+    # Save to CSV only if data subset is not empty
+    filename <- paste0("unknown_subset_", i, ".csv")
+    write.csv(data_subset, filename, row.names = FALSE)
+  } else {
+    cat(sprintf("No data available to save for model %d due to filtering or NA removal.\n", i))
+  }
+}
+
+```
+
+predicting seven unknown data subsets with respective feature combination models.
+```{R}
+library(caret)  # If not already loaded
+
+unknown_results <- list()
+
+for (i in seq_along(cv_results)) {
+  # Load the data for this model
+  filename <- paste0("unknown_subset_", i, ".csv")
+  model_data <- read.csv(filename)
+  
+  # Predict using the ith model
+  predictions <- predict(cv_results[[i]], model_data, type = "raw")
+  probabilities <- predict(cv_results[[i]], model_data, type = "prob")
+  
+  # Store results
+  unknown_results[[i]] <- list(predictions = predictions, probabilities = probabilities)
+}
+```
+
+
+Printing the predicted results
+```{r}
+# Summarize predictions
+for (i in seq_along(unknown_results)) {
+  cat("\nModel", i, "Summary:\n")
+  print(table(unknown_results[[i]]$predictions))  # Show frequency of each predicted class
+  
+  if ("probabilities" %in% names(unknown_results[[i]])) {
+    cat("\nModel", i, "Probability Summary:\n")
+    summary_stats <- summary(unknown_results[[i]]$probabilities)  # Summarize probabilities if available
+    print(summary_stats)
+  }
+}
+
+
+```

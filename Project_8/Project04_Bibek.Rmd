@@ -1,0 +1,36 @@
+---
+title: "Project04"
+author: "Bibek Adhikari"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Load libraries
+```{r}
+library(readr)
+library(tidyverse)
+library(caret)
+library(ggplot2)
+library(GGally)
+library(randomForest)
+library(cluster)
+library(factoextra)
+```
+
+
+#Load datasets
+```{r}
+background <- read_csv("background_data.csv")
+watchlist <- read_csv("unexploded_watchlist.csv")
+query_1 <- read_csv("query_1.csv")
+query_2 <- read_csv("query_2.csv")
+query_6 <- read_csv("query_6.csv")
+```
+
+
+xtabs(~Sample + Brand, watchlist)
+

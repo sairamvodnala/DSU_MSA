@@ -1,0 +1,536 @@
+---
+title: "Project_4"
+author: "Sai Ram Vodnala, Bibek Adhikari"
+date: "2025-05-04"
+output:
+  html_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Installing required packages and loading libraries
+```{r}
+# Install packages, if not already installed
+packages <- c("tidyverse", "randomForest", "cluster", "mclust", "ggplot2", "factoextra", "caret")
+installed <- rownames(installed.packages())
+to_install <- setdiff(packages, installed)
+if(length(to_install)) install.packages(to_install)
+
+# Load required libraries
+library(tidyverse)
+library(randomForest)
+library(cluster)
+library(mclust)
+library(ggplot2)
+library(factoextra)
+library(caret)
+library(readr)
+```
+
+#Loading the datasets
+```{r}
+# Loading unexploded, background and query data sets required for Project
+setwd("D:/Spring-2025/Stat602/Project04")
+uw <- read_csv("unexploded_watchlist.csv")
+bg <- read.csv("background_data.csv")
+q1 <- read.csv("query_1.csv")
+q2 <- read.csv("query_2.csv")
+q6 <- read.csv("query_6.csv")
+```
+
+
+# Previewing each of the loaded datasets
+```{r}
+#unexploded
+head(uw)
+```
+
+```{r}
+#background
+head(bg)
+```
+
+```{r}
+#query1
+head(q1)
+```
+
+```{r}
+#query2
+head(q2)
+```
+
+```{r}
+#query6
+head(q6)
+```
+
+
+#Exploratory Data Analysis (EDA)
+```{r}
+#Structure and summary of the loaded data sets
+str(uw)        #unexploded
+summary(uw)
+
+str(bg)       #background
+summary(bg)
+
+#queries
+str(q1)
+str(q2)
+str(q6)
+```
+
+
+```{r}
+#unique Brands in unexploded watchlist
+unique(uw$Brand)
+table(uw$Brand)
+```
+
+```{r}
+#View Sample Distribution in unexploded watchlist
+table(uw$Sample)
+#xtabs(~Sample + Brand, uw)
+```
+#Adding featuring engineered columns into the query data sets
+```{r}
+# Add derived shape features
+add_shape_features <- function(df) {
+  df$Circ <- 4 * pi * df$Area / (df$Perim. ^ 2) #Circularity (Circ.)
+  df$AR <- df$Major / df$Minor                  #Aspect Ratio
+  df$Round <- 1 / df$AR                         #Roundness
+  return(df)
+}
+
+q1 <- add_shape_features(q1)        #adding to q1
+q2 <- add_shape_features(q2)        #adding to q2
+q6 <- add_shape_features(q6)        #adding to q6
+```
+
+
+```{r}
+#Selecting relevant(7) features and scaling
+#Scaling features before clustering as it essential for Mclust
+q1_scaled <- scale(q1[, c("Area", "Perim.", "Major", "Minor", "Circ", "AR", "Round")])
+q2_scaled <- scale(q2[, c("Area", "Perim.", "Major", "Minor", "Circ", "AR", "Round")])
+q6_scaled <- scale(q6[, c("Area", "Perim.", "Major", "Minor", "Circ", "AR", "Round")])
+```
+
+
+#Clusturing using Mclust
+```{r}
+# Fitting Mclust model
+mc_q1 <- Mclust(q1_scaled)
+mc_q2 <- Mclust(q2_scaled)
+mc_q6 <- Mclust(q6_scaled)
+
+#Summary of models
+summary(mc_q1)
+summary(mc_q2)
+summary(mc_q6)
+```
+
+
+#Principal Component Analysis
+#Clusturing charts
+```{r}
+#PCA1 for q1
+pca_q1 <- prcomp(q1_scaled)
+
+fviz_pca_ind(pca_q1, 
+             geom.ind = "point", 
+             col.ind = as.factor(mc_q1$classification), 
+             palette = "jco", 
+             addEllipses = TRUE, 
+             ellipse.level = 0.95,
+             title = "PCA: Query 1 Particles by Mclust Cluster")
+```
+
+
+```{r}
+#PCA1 for q2
+pca_q2 <- prcomp(q2_scaled)
+
+fviz_pca_ind(pca_q2, 
+             geom.ind = "point", 
+             col.ind = as.factor(mc_q2$classification), 
+             palette = "jco", 
+             addEllipses = TRUE, 
+             ellipse.level = 0.95,
+             title = "PCA: Query 2 Particles by Mclust Cluster")
+```
+
+
+```{r}
+#PCA1 for q6
+pca_q6 <- prcomp(q6_scaled)
+
+fviz_pca_ind(pca_q6, 
+             geom.ind = "point", 
+             col.ind = as.factor(mc_q6$classification), 
+             palette = "jco", 
+             addEllipses = TRUE, 
+             ellipse.level = 0.95,
+             title = "PCA: Query 6 Particles by Mclust Cluster")
+```
+
+
+
+```{r}
+q1$cluster <- mc_q1$classification
+q2$cluster <- mc_q2$classification
+q6$cluster <- mc_q6$classification
+```
+
+
+```{r}
+# Clean up column names
+colnames(uw)[colnames(uw) == "Circ."] <- "Circ"
+colnames(bg)[colnames(bg) == "Circ."] <- "Circ"
+```
+
+
+```{r}
+#Add a Class Label Column
+uw$class <- uw$Brand          # Keep brand name as class
+bg$class <- "Background"      # Assign one label to all background particles
+
+```
+
+
+```{r}
+#Select only the seven required features
+features <- c("Area", "Perim.", "Major", "Minor", "Circ", "AR", "Round", "class")
+
+uw_clean <- uw[, features]
+bg_clean <- bg[, features]
+```
+
+
+```{r}
+#Combine into one training data set
+train_data <- rbind(uw_clean, bg_clean)
+
+# Convert class column to factor
+train_data$class <- as.factor(train_data$class)
+
+# Check class distribution
+table(train_data$class)
+```
+
+
+```{r}
+# Check for missing values
+colSums(is.na(train_data))
+```
+
+
+#Training
+
+```{r}
+# Set predictors and outcome
+X <- train_data[, c("Area", "Perim.", "Major", "Minor", "Circ", "AR", "Round")]
+y <- train_data$class
+```
+
+
+```{r}
+#splitting the Data for Training and Validation
+set.seed(123)
+
+train_index <- createDataPartition(y, p = 0.8, list = FALSE)
+X_train <- X[train_index, ]
+X_test <- X[-train_index, ]
+y_train <- y[train_index]
+y_test <- y[-train_index]
+```
+
+
+```{r}
+#Training Random Forest Model
+# Get the number of samples per class (balanced down to the smallest class)
+table(y_train)
+min_class_size <- min(table(y_train))
+
+# Training Random Forest with balanced sampling
+set.seed(123)
+rf_model <- randomForest(
+  x = X_train, 
+  y = y_train, 
+  ntree = 500,
+  importance = TRUE,
+  strata = y_train,
+  sampsize = rep(min_class_size, length(levels(y_train)))
+)
+
+print(rf_model)
+```
+
+
+#Prediction
+```{r}
+# Predict on test data
+rf_preds <- predict(rf_model, newdata = X_test)
+
+# Confusion Matrix
+confusionMatrix(rf_preds, y_test)
+
+# Variable Importance Plot
+varImpPlot(rf_model)
+```
+
+
+
+```{r}
+query_features <- c("Area", "Perim.", "Major", "Minor", "Circ", "AR", "Round")
+
+# Confirm features exist
+stopifnot(all(query_features %in% colnames(q1)))
+
+```
+
+
+#Prediction for q1,q2,q3
+```{r}
+# Predict class
+q1$predicted_class <- predict(rf_model, q1[, query_features])
+q2$predicted_class <- predict(rf_model, q2[, query_features])
+q6$predicted_class <- predict(rf_model, q6[, query_features])
+
+# Predict class probabilities (optional confidence)
+q1$prediction_confidence <- apply(predict(rf_model, q1[, query_features], type = "prob"), 1, max)
+q2$prediction_confidence <- apply(predict(rf_model, q2[, query_features], type = "prob"), 1, max)
+q6$prediction_confidence <- apply(predict(rf_model, q6[, query_features], type = "prob"), 1, max)
+```
+
+
+```{r}
+head(q1[, c("Area", "Perim.", "Major", "Minor", "predicted_class", "prediction_confidence")])
+```
+
+
+```{r}
+#writing the predictions as csv file
+write.csv(q1, "q1_with_predictions.csv", row.names = FALSE)
+write.csv(q2, "q2_with_predictions.csv", row.names = FALSE)
+write.csv(q6, "q6_with_predictions.csv", row.names = FALSE)
+
+```
+
+
+#Prediction results:
+```{r}
+# Function to generate a bar plot
+plot_bar_distribution <- function(df, query_name) {
+  ggplot(df, aes(x = predicted_class)) +
+    geom_bar(fill = "#2C3E50") +
+    labs(title = paste("Predicted Class Distribution -", query_name),
+         x = "Predicted Class", y = "Number of Particles") +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+}
+
+# Running plots for each query
+plot_bar_distribution(q1, "Query 1")
+plot_bar_distribution(q2, "Query 2")
+plot_bar_distribution(q6, "Query 6")
+```
+
+
+#Piecharts
+```{r}
+# Function to generate a pie chart
+plot_pie_distribution <- function(df, query_name) {
+  df_summary <- as.data.frame(table(df$predicted_class))
+  colnames(df_summary) <- c("Class", "Count")
+  df_summary$Percent <- round(df_summary$Count / sum(df_summary$Count) * 100, 1)
+  df_summary$Label <- paste0(df_summary$Class, " (", df_summary$Percent, "%)")
+
+  ggplot(df_summary, aes(x = "", y = Count, fill = Label)) +
+    geom_bar(stat = "identity", width = 1) +
+    coord_polar("y", start = 0) +
+    labs(title = paste("Predicted Class Proportion -", query_name), fill = "Class") +
+    theme_void()
+}
+
+# Run for each query
+plot_pie_distribution(q1, "Query 1")
+plot_pie_distribution(q2, "Query 2")
+plot_pie_distribution(q6, "Query 6")
+```
+
+
+#Per Clustering Aggregation
+#clusterwise prediction
+```{r}
+# Function to get class distribution per cluster
+aggregate_by_cluster <- function(df, query_name) {
+  summary <- df %>%
+    group_by(cluster, predicted_class) %>%
+    summarise(count = n()) %>%
+    arrange(cluster, desc(count))
+
+  print(paste("=== Summary for", query_name, "==="))
+  print(summary)
+  
+  return(summary)
+}
+
+#summaries
+summary_q1 <- aggregate_by_cluster(q1, "Query 1")
+summary_q2 <- aggregate_by_cluster(q2, "Query 2")
+summary_q6 <- aggregate_by_cluster(q6, "Query 6")
+```
+
+
+
+```{r}
+# Function to plot class distribution per cluster
+plot_cluster_composition <- function(summary_df, query_name) {
+  ggplot(summary_df, aes(x = factor(cluster), y = count, fill = predicted_class)) +
+    geom_bar(stat = "identity", position = "stack") +
+    labs(title = paste("Cluster-wise Brand Prediction -", query_name),
+         x = "Cluster", y = "Particle Count", fill = "Predicted Class") +
+    theme_minimal()
+}
+
+plot_cluster_composition(summary_q1, "Query 1")
+plot_cluster_composition(summary_q2, "Query 2")
+plot_cluster_composition(summary_q6, "Query 6")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#Not required
+```{r}
+# Combine class + one feature for each plot
+#ggplot(train_data, aes(x = Area, fill = class)) + 
+#  geom_histogram(position = "identity", bins = 50, alpha = 0.4) +
+#  labs(title = "Area Distribution by Class")
+
+#ggplot(train_data, aes(x = Circ, fill = class)) + 
+#  geom_histogram(position = "identity", bins = 50, alpha = 0.4) +
+#  labs(title = "Circularity Distribution by Class")
+
+#ggplot(train_data, aes(x = AR, fill = class)) + 
+#  geom_histogram(position = "identity", bins = 50, alpha = 0.4) +
+#  labs(title = "Aspect Ratio Distribution by Class")
+```
+
+```{r}
+#library(MASS)
+
+# Fit LDA
+#lda_model <- lda(class ~ Area + Perim. + Major + Minor + Circ + AR + Round, data = train_data)
+
+# View summary
+#lda_model
+```
+
+
+
+
+

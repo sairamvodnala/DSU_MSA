@@ -1,0 +1,324 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html><head></head><body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div>
+
+
+
+<h1 class="title toc-ignore">Stat 602 Project 4</h1>
+<h4 class="author">cps</h4>
+<h4 class="date">2025-04-28</h4>
+
+</div>
+
+
+<div class="section level2">
+<h2>Stat 602 Project 4</h2>
+<p>With your group, you will prepare and present a (roughly) 30-minute
+power point presentation on the problem background, model building
+process, and your recommendations. Provide a short white paper of your
+model building process, the selected model, and the model’s properties.
+Include annotated code that replicates your analysis. Only discuss your
+work on this project with your group, the instructors or GTA’s of the
+course.</p>
+<div class="section level3">
+<h3>The Problem</h3>
+<p>From a personal communication from Dr.&#160;Jack Hietpas of John Jay
+College of Criminal Justice.</p>
+<blockquote>
+<p>Small arms propellants (SAP) also known as canister powders are
+readily accessible and cost-effective materials that firearms
+enthusiasts can acquire for the legitimate assemble of ammunition. These
+attributes also make the these materials advantageous for the
+construction of improvised explosive devices (IEDs). For this project,
+204 one-pound canisters of smokeless propellant (powder) were acquired
+from local and online sources. These samples represent nine
+manufacturers and 154 unique brands. From each brand a single sample of
+particles was collected and analyzed with a high-throughput,
+non-destructive, and low-cost quantitative automated image analysis
+routine that provided size measurements and four shape measurements.</p>
+</blockquote>
+<p>Here is a recent publication on this work with some additional
+background. (Janean performed the statistical analysis on this
+paper.)</p>
+<p><a rel="noopener" href="https://www.sciencedirect.com/science/article/pii/S0379073823003304?via%3Dihub" class="uri">https://www.sciencedirect.com/science/article/pii/S0379073823003304?via%3Dihub</a></p>
+</div>
+<div class="section level3">
+<h3>The Task</h3>
+<p>Consider the setting where 3 sets of SAP particles from IEDs are
+recovered; all are from un-exploded IEDs.</p>
+<p>There are 5 lots of SAP particles of interest; each from a different
+brand.</p>
+<p>Ultimately, the investigators are interested in whether or not the
+sets of recovered SAP particles are from the one of five lots of SAP
+particles. Figuring out which specific lot would be particularly
+useful.</p>
+<blockquote>
+<p>Your specific task for Project 4 is to build an algorithm for each
+query object that will guess the brand of each particle in a query
+object.</p>
+</blockquote>
+</div>
+<div class="section level3">
+<h3>Data Resources</h3>
+<p>For these projects, you will be given the following data sets:</p>
+<ol style="list-style-type: decimal;">
+<li><p><code>unexploded_watchlist.csv</code></p></li>
+<li><p><code>background_data.csv</code></p></li>
+<li><p><code>query_1.csv</code></p></li>
+<li><p><code>query_2.csv</code></p></li>
+<li><p><code>query_6.csv</code></p></li>
+</ol>
+<p>The first data set, <code>unexploded_watchlist.csv</code> is a data
+set of five different lots of SAPs (each from a different brand as
+well), with five samples of SAP particles per brand for
+<code>unexploded_watchlist.csv</code>. The
+<code>background_data.csv</code> data set has one sample per lot from a
+number of lots that are not of interest to the examiners (typically, lot
+and brand are equivalent in this data set). For these data sets, each
+row of these data sets corresponds to 1 SAP particle. The 13 columns of
+correspond to the features recorded for each particle and are as
+follows:</p>
+<ol style="list-style-type: decimal;">
+<li><p>Particle: The individual SAP particle.</p></li>
+<li><p>Sample: The scoop of particles from one of the SAP containers.
+The lot that a scoop is from is the first 6 characters. The characters
+after the first 6 are the container that the scoop was from, ie.
+SP-007.B is the scoop from the <span class="math inline">\(B^{th}\)</span> container of the lot SP-007. If
+there is not a trailing text string then the scoop is either the first
+scoop or the only scoop from a lot.</p></li>
+<li><p>Distributor: The distributor of the brand of SAP.</p></li>
+<li><p>Brand: The brand of the SAP, this is the main class variable of
+interest.</p></li>
+<li><p>Shape: The examiner explained that they think this is the claimed
+shape of the particles- this is determined by the brand label, and not
+determined by the measurement process.</p></li>
+<li><p>Area: Area of selection in square pixels or in calibrated square
+units.</p></li>
+<li><p>Perim.: The length of the outside boundary of the selection. Uses
+the heading <strong>Perim.</strong> with Version IJ 1.44f and later, the
+perimeter of a composite selection is calculated by decomposing it into
+individual sections. Note that the composite perimeter and the sum of
+the individual perimeters may be different due to use of different
+calculation methods.</p></li>
+<li><p><strong><em>Fit Ellipse Feature Set-</em></strong> The Ellipse
+Fits command fits an ellipse to the selection.</p>
+<ol style="list-style-type: decimal;">
+<li><p>Major: Major is the primary axis of the best fitting
+ellipse.</p></li>
+<li><p>Minor: Minor is the secondary axis of the best fitting
+ellipse.</p></li>
+</ol></li>
+<li><p><strong><em>Shape Descriptors</em></strong></p>
+<ol style="list-style-type: decimal;">
+<li><p>Circularity (Circ.): <span class="math inline">\(4\pi
+\frac{Area}{Perimeter^2}\)</span> with a value of one indicating a
+perfect circle. As the value approaches 0, it indicates an increasingly
+elongated shape. Values may not be valid for very small
+particles.</p></li>
+<li><p>Aspect ratio (AR): The aspect ratio of the particle’s fitted
+ellipse, i.e., <span class="math inline">\(\frac{Major\  Axis}{Minor\
+Axis}\)</span>.</p></li>
+<li><p>Roundness (Round): The inverse of the Aspect Ratio.</p></li>
+<li><p>Solidity: <span class="math inline">\(\frac{Area}{Convex\
+Area}\)</span></p></li>
+</ol></li>
+</ol>
+<p>The first and second data sets only contain the features from the
+ImageJ software, namely:</p>
+<ol style="list-style-type: decimal;">
+<li><p>“Area”</p></li>
+<li><p>“Perim.”</p></li>
+<li><p>“Major”</p></li>
+<li><p>“Minor”</p></li>
+<li><p>“Circ.”</p></li>
+<li><p>“AR”</p></li>
+<li><p>“Round”</p></li>
+<li><p>“Solidity”</p></li>
+</ol>
+<p>The <code>query</code> csv files contain particles from the recovered
+IED’s. These data sets only have the following variables, with one
+particle per row.</p>
+<ol style="list-style-type: decimal;">
+<li><p>“Area”</p></li>
+<li><p>“Perim.”</p></li>
+<li><p>“Major”</p></li>
+<li><p>“Minor”</p></li>
+</ol>
+<div class="section level4">
+<h4>Features and Image extraction methods are described in greater
+detail in these two references.</h4>
+<p><a rel="noopener" href="https://imagej.nih.gov/ij/docs/guide/146-30.html#sub:Set-Measurements…">https://imagej.nih.gov/ij/docs/guide/146-30.html#sub:Set-Measurements…</a></p>
+<p>Schindelin, J., Arganda-Carreras, I., Frise, E., Kaynig, V., Longair,
+M., Pietzsch, T., Preibisch, S., Rueden, C., Saalfeld, S., Schmid, B.
+and Tinevez, J.Y., 2012. Fiji: an open-source platform for
+biological-image analysis. <em>Nature methods</em>, <em>9</em>(7),
+pp.676-682.</p>
+<p>You should not feel constrained to the features provided if you wish
+to use additional derived features.</p>
+</div>
+</div>
+</div>
+<div class="section level2">
+<h2>Required Components for the Submission</h2>
+<blockquote>
+<p>For your submission provide the following components:</p>
+</blockquote>
+<ol style="list-style-type: decimal;">
+<li><p>Your slides presentation on your approach, summarizing your
+recommendations, and conclusions. The main component of your assessment
+will be a presentation of these slides over zoom.</p></li>
+<li><p>The white paper report, with the methods you have used in
+building your classifiers/methods.</p>
+<ol style="list-style-type: lower-roman;">
+<li><p>You should use multiple methods and inference techniques; also
+provide documentation on implementation and construction of each
+methodology.</p></li>
+<li><p>You need to provide a summary for each query object of the
+predictions for all the particles in a query object.</p></li>
+</ol></li>
+</ol>
+<p>You will need to turn in the following three components:</p>
+<ul>
+<li>An annotated R-script/rmd that replicates your analysis for each
+problem.</li>
+<li>A write-up summarizing the methods. (White paper should have at most
+2 pages of written text per query. Tables and plots do not count towards
+the total page count but put tables/figures at the end of the write-up
+and reference forward to them.)</li>
+<li>A slides presentation discussing the work you have done on the
+project. (Including the following: introduce and review the
+problems/tasks; discuss the resources you have used to solve the
+problem; present the algorithms and methods you used to solve the
+problems/tasks; and your solutions/predictions with their corresponding
+accuracy.)</li>
+</ul>
+<blockquote>
+<p>Start early. Get something that works then come back and build up a
+better solution.</p>
+</blockquote>
+<p>Suggested Steps</p>
+<ol style="list-style-type: decimal;">
+<li><p>Explore the query objects to decide how many possible brands make
+up the collection of particles in the query object.</p></li>
+<li><p>Make up a sixth class of lots, by pooling all of the brands
+together that are not on the watch-list. In some fields this is called a
+universal background model.</p></li>
+<li><p>Build a classifier to predict which of the six classes (1
+universal background class and 5 brands) gave rise to each particle in
+the query object. Be careful of the unbalanced nature of the training
+data.</p></li>
+<li><p>Aggregate the individual particle predictions by cluster from
+step one.</p></li>
+<li><p>Summarize your results for the query object, giving a conclusion
+about which brands were used in the construction of the IED.</p></li>
+</ol>
+<p>Good Luck</p>
+<p>-cps</p>
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="module" src="https://s.brightspace.com/lib/bsi/2025.4.217/unbundled/mathjax.js"></script><script type="text/javascript">document.addEventListener('DOMContentLoaded', function() {
+						if (document.querySelector('math') || /\$\$|\\\(|\\\[|\\begin{|\\ref{|\\eqref{/.test(document.body.innerHTML)) {
+							document.querySelectorAll('mspace[linebreak="newline"]').forEach(elm => {
+								elm.setAttribute('style', 'display: block; height: 0.5rem;');
+							});
+
+							document.querySelectorAll('math mmultiscripts > none').forEach(elm => {
+								const mrow = document.createElementNS('http://www.w3.org/1998/Math/MathML', 'mrow');
+								elm.replaceWith(mrow);
+							});
+
+							window.D2L.MathJax.loadMathJax({
+								outputScale: 1.5,
+								renderLatex: false,
+								enableMML3Support: false
+							});
+						}
+					});</script><script type="module" src="https://s.brightspace.com/lib/bsi/2025.4.217/unbundled/prism.js"></script><script type="text/javascript">document.addEventListener('DOMContentLoaded', function() {
+					document.querySelectorAll('.d2l-code').forEach(code => {
+						window.D2L.Prism.formatCodeElement(code);
+					});
+				});</script><script type="module" src="https://s.brightspace.com/lib/bsi/2025.4.217/unbundled/embeds.js"></script><script type="text/javascript">document.addEventListener('DOMContentLoaded', function() {
+					window.D2L.EmbedRenderer.renderEmbeds(document.body);
+				});</script></body></html>

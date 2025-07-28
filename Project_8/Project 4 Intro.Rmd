@@ -1,0 +1,154 @@
+---
+title: 'Stat 602 Project 4'
+author: "cps"
+date: "`r Sys.Date()`"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Stat 602 Project 4
+
+With your group, you will prepare and present a (roughly) 30-minute power point presentation on the problem background, model building process, and your recommendations. Provide a short white paper of your model building process, the selected model, and the model's properties. Include annotated code that replicates your analysis. \emph{MAKE SURE YOU PROPERLY REFERENCE ANY MATERIAL (INCLUDING CHATGPT LIKE RESOURCES) YOU USE IN THIS EXAM-this is an easy way to fail the final and course!!} Only discuss your work on this project with your group, the instructors or GTA's of the course.
+
+### The Problem
+
+From a personal communication from Dr. Jack Hietpas of John Jay College of Criminal Justice.
+
+> Small arms propellants (SAP) also known as canister powders are readily accessible and cost-effective materials that firearms enthusiasts can acquire for the legitimate assemble of ammunition. These attributes also make the these materials advantageous for the construction of improvised explosive devices (IEDs). For this project, 204 one-pound canisters of smokeless propellant (powder) were acquired from local and online sources. These samples represent nine manufacturers and 154 unique brands. From each brand a single sample of particles was collected and analyzed with a high-throughput, non-destructive, and low-cost quantitative automated image analysis routine that provided size measurements and four shape measurements.
+
+Here is a recent publication on this work with some additional background. (Janean performed the statistical analysis on this paper.)
+
+<https://www.sciencedirect.com/science/article/pii/S0379073823003304?via%3Dihub>
+
+### The Task
+
+Consider the setting where 3 sets of SAP particles from IEDs are recovered; all are from un-exploded IEDs.
+
+There are 5 lots of SAP particles of interest; each from a different brand.
+
+Ultimately, the investigators are interested in whether or not the sets of recovered SAP particles are from the one of five lots of SAP particles. Figuring out which specific lot would be particularly useful.
+
+> Your specific task for Project 4 is to build an algorithm for each query object that will guess the brand of each particle in a query object.
+
+### Data Resources
+
+For these projects, you will be given the following data sets:
+
+1.  `unexploded_watchlist.csv`
+
+2.  `background_data.csv`
+
+3.  `query_1.csv`
+
+4.  `query_2.csv`
+
+5.  `query_6.csv`
+
+The first data set, `unexploded_watchlist.csv` is a data set of five different lots of SAPs (each from a different brand as well), with five samples of SAP particles per brand for `unexploded_watchlist.csv`. The `background_data.csv` data set has one sample per lot from a number of lots that are not of interest to the examiners (typically, lot and brand are equivalent in this data set). For these data sets, each row of these data sets corresponds to 1 SAP particle. The 13 columns of correspond to the features recorded for each particle and are as follows:
+
+1.  Particle: The individual SAP particle.
+
+2.  Sample: The scoop of particles from one of the SAP containers. The lot that a scoop is from is the first 6 characters. The characters after the first 6 are the container that the scoop was from, ie. SP-007.B is the scoop from the $B^{th}$ container of the lot SP-007. If there is not a trailing text string then the scoop is either the first scoop or the only scoop from a lot.
+
+3.  Distributor: The distributor of the brand of SAP.
+
+4.  Brand: The brand of the SAP, this is the main class variable of interest.
+
+5.  Shape: The examiner explained that they think this is the claimed shape of the particles- this is determined by the brand label, and not determined by the measurement process.
+
+6.  Area: Area of selection in square pixels or in calibrated square units.
+
+7.  Perim.: The length of the outside boundary of the selection. Uses the heading **Perim.** with Version IJ 1.44f and later, the perimeter of a composite selection is calculated by decomposing it into individual sections. Note that the composite perimeter and the sum of the individual perimeters may be different due to use of different calculation methods.
+
+8.  ***Fit Ellipse Feature Set-*** The Ellipse Fits command fits an ellipse to the selection.
+
+    1.  Major: Major is the primary axis of the best fitting ellipse.
+
+    2.  Minor: Minor is the secondary axis of the best fitting ellipse.
+
+9.  ***Shape Descriptors***
+
+    1.  Circularity (Circ.): $4\pi \frac{Area}{Perimeter^2}$ with a value of one indicating a perfect circle. As the value approaches 0, it indicates an increasingly elongated shape. Values may not be valid for very small particles.
+
+    2.  Aspect ratio (AR): The aspect ratio of the particle's fitted ellipse, i.e., $\frac{Major\  Axis}{Minor\ Axis}$.
+
+    3.  Roundness (Round): The inverse of the Aspect Ratio.
+
+    4.  Solidity: $\frac{Area}{Convex\ Area}$
+
+The first and second data sets only contain the features from the ImageJ software, namely:
+
+1.  "Area"
+
+2.  "Perim."
+
+3.  "Major"
+
+4.  "Minor"
+
+5.  "Circ."
+
+6.  "AR"
+
+7.  "Round"
+
+8.  "Solidity"
+
+The `query` csv files contain particles from the recovered IED's. These data sets only have the following variables, with one particle per row.
+
+1.  "Area"
+
+2.  "Perim."
+
+3.  "Major"
+
+4.  "Minor"
+
+#### Features and Image extraction methods are described in greater detail in these two references.
+
+[https://imagej.nih.gov/ij/docs/guide/146-30.html#sub:Set-Measurements...](https://imagej.nih.gov/ij/docs/guide/146-30.html#sub:Set-Measurements…)
+
+Schindelin, J., Arganda-Carreras, I., Frise, E., Kaynig, V., Longair, M., Pietzsch, T., Preibisch, S., Rueden, C., Saalfeld, S., Schmid, B. and Tinevez, J.Y., 2012. Fiji: an open-source platform for biological-image analysis. *Nature methods*, *9*(7), pp.676-682.
+
+You should not feel constrained to the features provided if you wish to use additional derived features.
+
+## Required Components for the Submission
+
+> For your submission provide the following components:
+
+1.  Your slides presentation on your approach, summarizing your recommendations, and conclusions. The main component of your assessment will be a presentation of these slides over zoom.
+
+2.  The white paper report, with the methods you have used in building your classifiers/methods.
+
+    i)  You should use multiple methods and inference techniques; also provide documentation on implementation and construction of each methodology.
+
+    ii) You need to provide a summary for each query object of the predictions for all the particles in a query object.
+
+You will need to turn in the following three components:
+
+-   An annotated R-script/rmd that replicates your analysis for each problem.
+-   A write-up summarizing the methods. (White paper should have at most 2 pages of written text per query. Tables and plots do not count towards the total page count but put tables/figures at the end of the write-up and reference forward to them.)
+-   A slides presentation discussing the work you have done on the project. (Including the following: introduce and review the problems/tasks; discuss the resources you have used to solve the problem; present the algorithms and methods you used to solve the problems/tasks; and your solutions/predictions with their corresponding accuracy.)
+
+> Start early. Get something that works then come back and build up a better solution.
+
+Suggested Steps
+
+1.  Explore the query objects to decide how many possible brands make up the collection of particles in the query object.
+
+2.  Make up a sixth class of lots, by pooling all of the brands together that are not on the watch-list. In some fields this is called a universal background model.
+
+3.  Build a classifier to predict which of the six classes (1 universal background class and 5 brands) gave rise to each particle in the query object. Be careful of the unbalanced nature of the training data.
+
+4.  Aggregate the individual particle predictions by cluster from step one.
+
+5.  Summarize your results for the query object, giving a conclusion about which brands were used in the construction of the IED.
+
+Good Luck
+
+-cps

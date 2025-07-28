@@ -1,0 +1,602 @@
+---
+title: "project2"
+author: "Sai Ram Vodnala"
+date: "2025-03-27"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
+```{r}
+# Loading the passcode dataset
+Password_data <- read.csv("DSL-StrongPasswordData.csv", header = TRUE)
+head(Password_data)
+```
+```{r}
+# Loading libraries
+library(dplyr)
+library(readr)
+library(ggplot2)
+library(caret)        # Used for data partitioning
+```
+
+```{r}
+# To View structure
+glimpse(Password_data)
+
+# How many unique subjects?
+length(unique(Password_data$subject))
+
+
+```
+
+```{r}
+# filtering column called 'rep' (typing repetition index)
+filtered_data <- Password_data %>%
+  filter(rep >= 31 & rep <= 50)
+
+# to know shape of data
+dim(filtered_data)
+
+```
+
+```{r}
+set.seed(123)  # for reproducibility
+
+# To Create stratified split
+train_index <- createDataPartition(filtered_data$subject, p = 0.8, list = FALSE)
+
+train_data <- filtered_data[train_index, ]
+test_data  <- filtered_data[-train_index, ]
+
+# For Viewing class distribution
+table(train_data$subject)
+
+```
+
+#Feature Engineering
+```{r}
+#Creating new three columns total_h_time,total_dd_time,total_ud_time for both train and test sets  
+train_data <- train_data %>%
+  mutate(
+    total_h_time  = rowSums(dplyr::select(., starts_with("H."))),
+    total_dd_time = rowSums(dplyr::select(., starts_with("DD."))),
+    total_ud_time = rowSums(dplyr::select(., starts_with("UD.")))
+  )
+
+test_data <- test_data %>%
+  mutate(
+    total_h_time  = rowSums(dplyr::select(., starts_with("H."))),
+    total_dd_time = rowSums(dplyr::select(., starts_with("DD."))),
+    total_ud_time = rowSums(dplyr::select(., starts_with("UD.")))
+  )
+dim(train_data)
+dim(test_data)
+```
+
+#Data Preprocessing
+```{r}
+# Standardizing all numeric columns (except subject) (Its Used for XGBoost and SVM)
+library(caret)
+
+preprocess <- preProcess(dplyr::select(train_data, -subject), method = c("center", "scale"))
+
+
+train_scaled <- predict(preprocess, dplyr::select(train_data, -subject))
+test_scaled  <- predict(preprocess, dplyr::select(test_data, -subject))
+
+
+# Adding subject to column back
+train_scaled$subject <- train_data$subject
+test_scaled$subject  <- test_data$subject
+
+```
+
+#Baseline Model Building and Evaluation
+
+```{r}
+#required libraries to be loaded
+library(nnet)
+library(MASS)
+library(mclust)
+library(rpart)
+library(randomForest)
+library(xgboost)
+library(e1071)
+library(tibble)
+
+```
+
+```{r}
+  #Firstly selecting only three features and applying classification techniques
+train_total <- train_data %>% dplyr::select(subject, total_h_time, total_dd_time, total_ud_time)
+test_total  <- test_data %>% dplyr::select(subject, total_h_time, total_dd_time, total_ud_time)
+
+# To Make sure that 'subject' is a factor
+train_total$subject <- as.factor(train_total$subject)
+test_total$subject  <- as.factor(test_total$subject)
+
+```
+
+#Model 1: Multinomial Logistic Regression
+```{r}
+library(nnet)
+
+log_model <- multinom(subject ~ ., data = train_total)
+log_preds <- predict(log_model, newdata = test_total)
+log_acc <- mean(log_preds == test_total$subject)
+
+```
+2. LDA
+
+```{r}
+#Linear Discriminant Analysis
+library(MASS)
+
+lda_model <- lda(subject ~ ., data = train_total)
+lda_preds <- predict(lda_model, newdata = test_total)$class
+lda_acc <- mean(lda_preds == test_total$subject)
+
+```
+
+3. QDA
+```{r}
+#Quadratic Discriminant Analysis
+qda_model <- qda(subject ~ ., data = train_total)
+qda_preds <- predict(qda_model, newdata = test_total)$class
+qda_acc <- mean(qda_preds == test_total$subject)
+
+```
+
+4. MClustDA
+```{r}
+#MclustDA discriminant analysis
+library(mclust)
+
+mclust_model <- MclustDA(train_total %>% dplyr::select(-subject), train_total$subject)
+mclust_preds <- predict(mclust_model, test_total %>% dplyr::select(-subject))$classification
+mclust_acc <- mean(mclust_preds == test_total$subject)
+
+
+```
+5. Decision Tree
+```{r}
+library(rpart)
+
+tree_model <- rpart(subject ~ ., data = train_total, method = "class")
+tree_preds <- predict(tree_model, newdata = test_total, type = "class")
+tree_acc <- mean(tree_preds == test_total$subject)
+
+```
+
+6. Random Forest
+```{r}
+library(randomForest)
+
+rf_model <- randomForest(subject ~ ., data = train_total)
+rf_preds <- predict(rf_model, newdata = test_total)
+rf_acc <- mean(rf_preds == test_total$subject)
+
+```
+
+7. XGBoost
+```{r}
+library(xgboost)
+
+# Preparing data f
+x_train <- as.matrix(train_total %>% dplyr::select(total_ud_time, total_dd_time, total_h_time))
+x_test  <- as.matrix(test_total  %>% dplyr::select(total_ud_time, total_dd_time, total_h_time))
+
+y_train <- as.numeric(train_total$subject) - 1
+y_test  <- as.numeric(test_total$subject) - 1
+
+xgb_model <- xgboost(data = x_train, label = y_train, objective = "multi:softmax",
+                     num_class = length(unique(train_total$subject)),
+                     nrounds = 30, verbose = 0)
+
+xgb_preds <- predict(xgb_model, x_test)
+xgb_acc <- mean(xgb_preds == y_test)
+
+```
+
+8.SVM
+```{r}
+library(e1071)
+
+svm_model <- svm(subject ~ ., data = train_total, kernel = "radial", cost = 1, gamma = 0.01)
+svm_preds <- predict(svm_model, newdata = test_total)
+svm_acc <- mean(svm_preds == test_total$subject)
+
+```
+Summary Table — Baseline Model Comparison
+
+```{r}
+
+baseline_results <- tibble(
+  Model = c("Multinomial Logistic", "LDA", "QDA", "MClustDA",
+            "Decision Tree", "Random Forest", "XGBoost", "SVM"),
+  Features = "3 total_features",
+  Accuracy = c(log_acc, lda_acc, qda_acc, mclust_acc,
+               tree_acc, rf_acc, xgb_acc, svm_acc)
+)
+#To print all baseline models
+print(baseline_results)
+
+```
+#Now Applying all features on eight models
+
+```{r}
+# Performing PCA on training data (excluding subject)
+pca_model <- prcomp(train_scaled %>% dplyr::select(-subject), center = TRUE, scale. = TRUE)
+
+# Choosing top 17 PCs
+n_pcs <- 17
+
+train_pca <- as.data.frame(predict(pca_model, train_scaled %>% dplyr::select(-subject))[, 1:n_pcs])
+train_pca$subject <- train_scaled$subject
+
+test_pca <- as.data.frame(predict(pca_model, test_scaled %>% dplyr::select(-subject))[, 1:n_pcs])
+test_pca$subject <- test_scaled$subject
+
+
+```
+1.Logistic Regression
+```{r}
+log_model_pca <- multinom(subject ~ ., data = train_pca)
+log_preds_pca <- predict(log_model_pca, newdata = test_pca)
+log_acc_pca <- mean(log_preds_pca == test_pca$subject)
+
+
+```
+2.LDA
+```{r}
+lda_model_pca <- lda(subject ~ ., data = train_pca)
+lda_preds_pca <- predict(lda_model_pca, newdata = test_pca)$class
+lda_acc_pca <- mean(lda_preds_pca == test_pca$subject)
+
+```
+3.QDA
+```{r}
+qda_model_pca <- qda(subject ~ ., data = train_pca)
+qda_preds_pca <- predict(qda_model_pca, newdata = test_pca)$class
+qda_acc_pca <- mean(qda_preds_pca == test_pca$subject)
+
+```
+4.MclustDA
+```{r}
+mclust_model_pca <- MclustDA(train_pca %>% dplyr::select(-subject), train_pca$subject)
+mclust_preds_pca <- predict(mclust_model_pca, test_pca %>% dplyr::select(-subject))$classification
+mclust_acc_pca <- mean(mclust_preds_pca == test_pca$subject)
+
+```
+Models with Full Raw Features
+5. Decision Tree
+```{r}
+tree_model_full <- rpart(subject ~ ., data = train_data, method = "class")
+tree_preds_full <- predict(tree_model_full, newdata = test_data, type = "class")
+tree_acc_full <- mean(tree_preds_full == test_data$subject)
+
+```
+
+6.Random Forest
+```{r}
+train_data$subject <- as.factor(train_data$subject)
+test_data$subject  <- as.factor(test_data$subject)
+
+rf_model_full <- randomForest(subject ~ ., data = train_data)
+rf_preds_full <- predict(rf_model_full, newdata = test_data)
+rf_acc_full <- mean(rf_preds_full == test_data$subject)
+
+
+```
+
+```{r}
+library(tibble)
+
+advanced_results <- tibble(
+  Model = c(
+    "Multinomial Logistic (PCA)", 
+    "LDA (PCA)", 
+    "QDA (PCA)", 
+    "MClustDA (PCA)",
+    "Decision Tree (Full)", 
+    "Random Forest (Full)"
+  ),
+  Features = c(rep("Top 17 PCs", 4), rep("Raw Features", 2)),
+  Accuracy = c(
+    log_acc_pca, 
+    lda_acc_pca, 
+    qda_acc_pca, 
+    mclust_acc_pca,
+    tree_acc_full, 
+    rf_acc_full
+  )
+)
+
+print(advanced_results)
+
+
+```
+7.XGBoost
+
+```{r}
+train_scaled$subject <- as.factor(train_scaled$subject)
+test_scaled$subject  <- as.factor(test_scaled$subject)
+
+# To Create a lookup table
+subject_levels <- levels(train_scaled$subject)
+
+# here Converting subjects to 0-based numeric labels
+y_train_full <- as.integer(train_scaled$subject) - 1
+y_test_full  <- as.integer(factor(test_scaled$subject, levels = subject_levels)) - 1
+
+any(is.na(y_train_full))  # checking for nulls
+any(is.na(y_test_full))   # so Should be FALSE
+
+```
+```{r}
+library(xgboost)
+
+x_train_full <- as.matrix(train_scaled %>% dplyr::select(-subject))
+x_test_full  <- as.matrix(test_scaled %>% dplyr::select(-subject))
+
+xgb_model_full <- xgboost(data = x_train_full, label = y_train_full, objective = "multi:softmax",
+                          num_class = length(subject_levels),
+                          nrounds = 30, verbose = 0)
+
+xgb_preds_full <- predict(xgb_model_full, x_test_full)
+xgb_acc_full <- mean(xgb_preds_full == y_test_full)
+
+cat("XGBoost Accuracy (Full):", xgb_acc_full, "\n")
+
+```
+8.SVM
+```{r}
+svm_model_full <- svm(subject ~ ., data = train_scaled, kernel = "radial", cost = 1, gamma = 0.01)
+svm_preds_full <- predict(svm_model_full, newdata = test_scaled)
+svm_acc_full <- mean(svm_preds_full == test_scaled$subject)
+
+
+```
+
+#Summary Table — Advanced Model Comparison
+```{r}
+advanced_results <- tibble(
+  Model = c("Multinomial Logistic (PCA)", "LDA (PCA)", "QDA (PCA)", "MClustDA (PCA)",
+            "Decision Tree (Full)", "Random Forest (Full)", "XGBoost (Full)", "SVM (Full)"),
+  Features = c(rep("Top 17 PCs", 4), rep("ALL Features", 4)),
+  Accuracy = c(log_acc_pca, lda_acc_pca, qda_acc_pca, mclust_acc_pca,
+               tree_acc_full, rf_acc_full, xgb_acc_full, svm_acc_full)
+)
+
+print(advanced_results)
+
+```
+#Model Tuning
+```{r}
+```
+
+1.Random Forest
+```{r}
+# To Control for 5-fold Cross validation
+ctrl <- trainControl(method = "cv", number = 5)
+
+# Tuning mtry (number of variables considered at each split)
+set.seed(42)
+rf_tuned <- train(subject ~ ., data = train_data,
+                  method = "rf",
+                  trControl = ctrl,
+                  tuneGrid = expand.grid(mtry = c(5, 10, 15, 20)))
+
+# printing the Best mtry value
+print(rf_tuned$bestTune)
+plot(rf_tuned)
+
+# now Predicting on test set
+rf_preds_tuned <- predict(rf_tuned, newdata = test_data)
+rf_acc_tuned <- mean(rf_preds_tuned == test_data$subject)
+cat("Random Forest Tuned Accuracy:", rf_acc_tuned, "\n")
+
+
+```
+2.SVM
+```{r}
+# Tried with less computational code
+# Tuning Grid of C and sigma (gamma)
+svm_grid <- expand.grid(
+  C = c(1, 5),              # Here fewer cost values
+  sigma = c(0.01, 0.1)      # fewer gamma values
+)
+
+
+set.seed(42)
+svm_tuned <- train(subject ~ ., data = train_scaled,
+                   method = "svmRadial",
+                   preProcess = NULL,
+                   trControl = ctrl,
+                   tuneLength = 3)
+
+svm_preds_tuned <- predict(svm_tuned, newdata = test_scaled)
+svm_acc_tuned <- mean(svm_preds_tuned == test_scaled$subject)
+cat("SVM Tuned Accuracy (Fast):", svm_acc_tuned, "\n")
+
+```
+
+3.XGBoost
+```{r}
+# Encoding subject as factor first, then numeric labels
+x_train <- as.matrix(train_scaled %>% dplyr::select(-subject))
+x_test  <- as.matrix(test_scaled %>% dplyr::select(-subject))
+y_train <- train_scaled$subject
+y_test  <- test_scaled$subject
+
+# caret compatible data
+train_xgb <- train_scaled
+train_xgb$subject <- as.factor(train_xgb$subject)
+
+# Tuning the key parameters
+xgb_grid <- expand.grid(
+  nrounds = 30,
+  max_depth = c(4, 6),
+  eta = 0.1,
+  gamma = 0,
+  colsample_bytree = 1,
+  min_child_weight = 1,
+  subsample = 1
+)
+
+set.seed(42)
+xgb_tuned <- train(subject ~ ., data = train_xgb,
+                   method = "xgbTree",
+                   trControl = ctrl,
+                   tuneGrid = xgb_grid,
+                   verbose = FALSE)
+#printing the best parameters
+print(xgb_tuned$bestTune)
+plot(xgb_tuned)
+# now Predicting on test set
+xgb_preds_tuned <- predict(xgb_tuned, newdata = test_scaled)
+xgb_acc_tuned <- mean(xgb_preds_tuned == test_scaled$subject)
+cat("XGBoost Tuned Accuracy (Fast):", xgb_acc_tuned, "\n")
+
+```
+#Model Evaluation
+```{r}
+library(caret)
+library(dplyr)
+library(ggplot2)
+library(forcats)
+```
+```{r}
+#Considering the Random Forest is the best model
+# Generating confusion matrix
+conf_matrix <- confusionMatrix(rf_preds_tuned, test_data$subject)
+
+# Printing full confusion matrix
+print(conf_matrix)
+
+
+```
+
+```{r}
+# Extracting class-wise stats
+class_stats <- as.data.frame(conf_matrix$byClass)
+
+# Add subject label
+class_stats$subject <- rownames(class_stats)
+
+# Keep main metrics
+summary_stats <- class_stats %>%
+  dplyr::select(subject, Precision = Precision, Recall = Recall, F1 = F1)
+
+# View top/bottom performance classes
+summary_stats %>% arrange(F1) %>% head()
+summary_stats %>% arrange(desc(F1)) %>% head()
+
+```
+
+```{r}
+#Now Creating a dataframe of actual vs. predicted
+library(dplyr)
+
+misclass_df <- data.frame(
+  actual = test_data$subject,
+  predicted = rf_preds_tuned
+)
+
+# Keeping only incorrect predictions
+misclass_df <- misclass_df %>%
+  filter(actual != predicted)
+
+#   To Count confusion pairs
+confusion_pairs <- misclass_df %>%
+  group_by(actual, predicted) %>%
+  summarise(freq = n(), .groups = "drop") %>%
+  arrange(desc(freq))
+
+# To View top 10 most confused subject pairs
+head(confusion_pairs, 10)
+
+
+```
+
+```{r}
+library(ggplot2)
+
+top_confusions <- head(confusion_pairs, 10)
+
+ggplot(top_confusions, aes(x = actual, y = predicted, fill = freq)) +
+  geom_tile(color = "white") +
+  geom_text(aes(label = freq), size = 5) +
+  scale_fill_gradient(low = "white", high = "red") +
+  labs(title = "Top Confused Subject Pairs",
+       x = "Actual Subject", y = "Predicted Subject") +
+  theme_minimal()
+
+
+
+```
+
+```{r}
+confused_pair <- c("s051", "s007")
+
+ggplot(test_data %>% filter(subject %in% confused_pair),
+       aes(x = total_h_time, fill = subject)) +
+  geom_histogram(alpha = 0.6, bins = 15, position = "identity") +
+  labs(title = "Total Hold Time: s051 vs s007") +
+  theme_minimal()
+
+
+```
+```{r}
+confused_pair <- c("s051", "s007")
+
+ggplot(test_data %>% filter(subject %in% confused_pair),
+       aes(x = total_dd_time, fill = subject)) +
+  geom_histogram(alpha = 0.6, bins = 15, position = "identity") +
+  labs(title = "Total DD Time: s051 vs s007") +
+  theme_minimal()
+
+
+
+```
+
+
+
+```{r}
+confused_pair <- c("s051", "s007")
+
+ggplot(test_data %>% filter(subject %in% confused_pair),
+       aes(x = total_ud_time, fill = subject)) +
+  geom_histogram(alpha = 0.6, bins = 15, position = "identity") +
+  labs(title = "Total UD Time: s051 vs s007") +
+  theme_minimal()
+
+
+```

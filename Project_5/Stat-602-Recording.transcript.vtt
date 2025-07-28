@@ -1,0 +1,2166 @@
+WEBVTT
+
+1
+00:00:07.470 --> 00:00:09.010
+Sai Ram Vodnala: Oh, can you able to see my screen.
+
+2
+00:00:11.880 --> 00:00:12.660
+Sai Ram Vodnala: Yeah, okay.
+
+3
+00:00:15.840 --> 00:00:18.279
+Sai Ram Vodnala: so what actually did is like.
+
+4
+00:00:24.180 --> 00:00:28.980
+Sai Ram Vodnala: so I found that those are not normal. Right from this test.
+
+5
+00:00:29.290 --> 00:00:30.559
+Bibek Adhikari: Yeah, those were not normal. Right?
+
+6
+00:00:30.560 --> 00:00:35.139
+Sai Ram Vodnala: So so after Fdr adjusted pay value, it's still not normal.
+
+7
+00:00:35.260 --> 00:00:39.420
+Sai Ram Vodnala: So I did a log transformation here.
+
+8
+00:00:40.340 --> 00:00:42.350
+Sai Ram Vodnala: This is a loud transformation part.
+
+9
+00:00:42.630 --> 00:00:43.760
+Bibek Adhikari: Oh, okay. Cool.
+
+10
+00:00:45.100 --> 00:00:49.970
+Sai Ram Vodnala: Then, after doing now log transformation. But still the result
+
+11
+00:00:50.760 --> 00:00:54.999
+Sai Ram Vodnala: of Fr. If a gesture is also like it's not normal.
+
+12
+00:00:56.140 --> 00:00:57.140
+Sai Ram Vodnala: So.
+
+13
+00:00:57.420 --> 00:01:00.769
+Sai Ram Vodnala: So we are going to give the same result like it is not normal.
+
+14
+00:01:00.770 --> 00:01:13.849
+Bibek Adhikari: Yeah, it's like as I told you, like, I talked with some other friends associated. They said that even like there might be a little established pattern. But there is not at all normalization of the entire data set, you know.
+
+15
+00:01:14.830 --> 00:01:15.980
+Sai Ram Vodnala: Yeah, that's right.
+
+16
+00:01:16.130 --> 00:01:16.810
+Bibek Adhikari: Yeah.
+
+17
+00:01:16.810 --> 00:01:17.990
+Sai Ram Vodnala: Yeah, it's not normal.
+
+18
+00:01:18.710 --> 00:01:20.209
+Sai Ram Vodnala: So, and one more thing.
+
+19
+00:01:20.390 --> 00:01:23.880
+Sai Ram Vodnala: So, the objective is to find the threshold value right.
+
+20
+00:01:24.040 --> 00:01:28.430
+Bibek Adhikari: No, it's not threshold value. I I don't think like we need to find some threshold value.
+
+21
+00:01:28.860 --> 00:01:36.579
+Sai Ram Vodnala: Okay, but but still to find the threshold value. I use this rolling mean and rolling variants. So these plots?
+
+22
+00:01:37.220 --> 00:01:38.510
+Sai Ram Vodnala: Okay? Oh, yeah.
+
+23
+00:01:38.510 --> 00:01:42.459
+Sai Ram Vodnala: This plot? Yeah, from these plots we can finalize
+
+24
+00:01:42.780 --> 00:01:45.069
+Sai Ram Vodnala: around. Can you able to see my screen.
+
+25
+00:01:45.070 --> 00:01:50.930
+Bibek Adhikari: Yeah, I can see your screen. But can you scroll down to the image?
+
+26
+00:01:51.880 --> 00:01:52.820
+Bibek Adhikari: The graph?
+
+27
+00:01:53.100 --> 00:01:54.370
+Bibek Adhikari: I cannot see the graph.
+
+28
+00:02:01.610 --> 00:02:02.390
+Bibek Adhikari: Okay.
+
+29
+00:02:02.730 --> 00:02:09.600
+Sai Ram Vodnala: So from this result. We can conclude around 70 to 75 that I can write in the white paper. No problem.
+
+30
+00:02:09.840 --> 00:02:14.299
+Bibek Adhikari: Oh, okay, around like 70. What do you mean? Like around 70.
+
+31
+00:02:14.770 --> 00:02:17.410
+Sai Ram Vodnala: Around 70, 75 to 100.
+
+32
+00:02:17.820 --> 00:02:21.010
+Bibek Adhikari: Oh, around 7,500 times or minutes.
+
+33
+00:02:22.130 --> 00:02:23.260
+Sai Ram Vodnala: Attempts.
+
+34
+00:02:23.260 --> 00:02:27.369
+Bibek Adhikari: Attempts. Okay, alright. So normalizing seems to be like after 75, right?
+
+35
+00:02:27.370 --> 00:02:28.120
+Sai Ram Vodnala: Yeah.
+
+36
+00:02:28.440 --> 00:02:31.069
+Bibek Adhikari: Okay, that means, oh, okay, cool.
+
+37
+00:02:33.340 --> 00:02:38.269
+Sai Ram Vodnala: So so that's that's it
+
+38
+00:02:38.400 --> 00:02:43.560
+Sai Ram Vodnala: from my end. So I need to make the new white paper again. I just know I completed this.
+
+39
+00:02:43.930 --> 00:02:47.899
+Bibek Adhikari: Oh, cool. Yeah, like, I was like it. It's
+
+40
+00:02:47.900 --> 00:02:51.580
+Bibek Adhikari: I did not include this residual plots and everything.
+
+41
+00:02:52.116 --> 00:02:53.140
+Bibek Adhikari: Why is that so?
+
+42
+00:02:54.400 --> 00:03:01.780
+Sai Ram Vodnala: Yeah. But again, we need to write log, like, it's already complex. Right? So first, st we are doing without log transformation.
+
+43
+00:03:01.960 --> 00:03:10.770
+Sai Ram Vodnala: We are finding that we are checking the normality test. Then, after that we are applying normal log transformation to the those features
+
+44
+00:03:11.160 --> 00:03:18.740
+Sai Ram Vodnala: and apply applying model a linear equation models. Then we are again seeing the normality. So it's like kind of lengthy process. So no, no need to do.
+
+45
+00:03:19.470 --> 00:03:20.740
+Bibek Adhikari: Okay. But
+
+46
+00:03:20.740 --> 00:03:29.549
+Bibek Adhikari: I think we can say something about that one to like. We have included this first, st and later on we move on to because it didn't show any normality. We move on to log transformation.
+
+47
+00:03:30.200 --> 00:03:35.530
+Bibek Adhikari: So I think that can be kept to right. So at least one we just talked about more of the slides.
+
+48
+00:03:35.890 --> 00:03:36.520
+Sai Ram Vodnala: Yes.
+
+49
+00:03:42.350 --> 00:03:49.329
+Sai Ram Vodnala: so this is so directly. 1st time checking this Shapiro results.
+
+50
+00:03:49.530 --> 00:03:50.190
+Bibek Adhikari: Okay.
+
+51
+00:03:52.050 --> 00:03:55.150
+Sai Ram Vodnala: So this is Fdrp value. But still
+
+52
+00:03:55.310 --> 00:04:04.020
+Sai Ram Vodnala: this is a queue plot. Qq. Plot for everything. Why, I I just a question like, why you selected this s. 0 0 to these 4 subjects only.
+
+53
+00:04:04.170 --> 00:04:05.600
+Bibek Adhikari: It was just random, like, in
+
+54
+00:04:06.000 --> 00:04:16.219
+Bibek Adhikari: doing yeah, doing like, all at once, I just tried to choose, like, probably distribute the things across like 1 4th of the entire data set.
+
+55
+00:04:17.029 --> 00:04:17.879
+Sai Ram Vodnala: Okay.
+
+56
+00:04:19.120 --> 00:04:23.300
+Bibek Adhikari: So at least like one person would represent for other person. So.
+
+57
+00:04:23.440 --> 00:04:26.150
+Bibek Adhikari: assuming that I just it, was just random.
+
+58
+00:04:26.800 --> 00:04:27.810
+Sai Ram Vodnala: Yeah, okay.
+
+59
+00:04:31.920 --> 00:04:40.949
+Bibek Adhikari: So what we can say for this one is like, we can say that we choose the 1st point, the last 1st subject, last subject and middle 2 subjects. So we just random.
+
+60
+00:04:40.950 --> 00:04:45.369
+Sai Ram Vodnala: I just want to know that this is linear mixed. Or did you use a linear mixed model.
+
+61
+00:04:45.370 --> 00:04:49.800
+Bibek Adhikari: That's just linear model, not linear mixed model. Lm is for linear model.
+
+62
+00:04:54.480 --> 00:04:57.000
+Bibek Adhikari: It's not the linear mixed model. So is
+
+63
+00:04:57.160 --> 00:05:02.330
+Bibek Adhikari: have I described it as linear mixed model. I think. Yeah, I have said that it is a linear model.
+
+64
+00:05:02.930 --> 00:05:04.080
+Bibek Adhikari: not linear mixed model.
+
+65
+00:05:04.080 --> 00:05:12.670
+Sai Ram Vodnala: Oh, okay, could you check from your end in your code that which forwarded it is showing that leader mixed? Maybe this is I my mistake, or.
+
+66
+00:05:13.564 --> 00:05:18.440
+Bibek Adhikari: No. Can you do control F control find? We can see like right here, too.
+
+67
+00:05:20.280 --> 00:05:22.250
+Bibek Adhikari: So control F.
+
+68
+00:05:23.400 --> 00:05:25.539
+Sai Ram Vodnala: Yeah, you can see this. Lm, linear mixed.
+
+69
+00:05:28.870 --> 00:05:30.100
+Sai Ram Vodnala: You want to invest.
+
+70
+00:05:30.790 --> 00:05:34.039
+Bibek Adhikari: Is there a linear mix or hold on.
+
+71
+00:05:40.400 --> 00:05:43.979
+Bibek Adhikari: So lm, is just linear regression model, not linear mixed model.
+
+72
+00:05:44.240 --> 00:05:47.879
+Bibek Adhikari: So for linear mix, it should be LNER. I believe so.
+
+73
+00:05:49.190 --> 00:05:55.210
+Sai Ram Vodnala: Okay, I just want to know, like you are doing reputation plus session index. Right?
+
+74
+00:05:55.770 --> 00:06:03.360
+Bibek Adhikari: Yep, yep, replicates per plus session index and replicates. Those are above 30, you know, like only the top 20.
+
+75
+00:06:03.660 --> 00:06:06.620
+Sai Ram Vodnala: Yeah, that's fine. But the thing here is like.
+
+76
+00:06:06.980 --> 00:06:09.320
+Sai Ram Vodnala: then where we are using the type count.
+
+77
+00:06:09.790 --> 00:06:12.569
+Sai Ram Vodnala: what is the use of that creating the covariate.
+
+78
+00:06:13.350 --> 00:06:14.240
+Bibek Adhikari: So
+
+79
+00:06:15.060 --> 00:06:28.069
+Bibek Adhikari: type can. I haven't used the type, count. So type count and repeats, repeats, those are the same thing like when I analyzed the data I saw saw there was no any difference between the replicates and the type counts.
+
+80
+00:06:28.700 --> 00:06:36.169
+Bibek Adhikari: So yeah, so if you if you build the data set using the type count.
+
+81
+00:06:37.070 --> 00:06:40.305
+Bibek Adhikari: So so can you go to the environment
+
+82
+00:06:41.390 --> 00:06:47.070
+Bibek Adhikari: on the right side, on the top environment. So can you see, like, let's see
+
+83
+00:06:47.250 --> 00:06:49.240
+Bibek Adhikari: which one is the one.
+
+84
+00:06:51.620 --> 00:06:56.609
+Bibek Adhikari: So it's not the filter it should be. Password is, I think that's the original one.
+
+85
+00:06:57.630 --> 00:07:06.399
+Bibek Adhikari: and at least it should have 38 different variables. Okay, total attempts, total attempts. One, can you open total attempts?
+
+86
+00:07:08.390 --> 00:07:09.529
+Bibek Adhikari: What was that one.
+
+87
+00:07:09.530 --> 00:07:10.280
+Sai Ram Vodnala: Which one.
+
+88
+00:07:10.280 --> 00:07:11.539
+Bibek Adhikari: Total attempts.
+
+89
+00:07:13.470 --> 00:07:15.259
+Bibek Adhikari: It was somewhere.
+
+90
+00:07:15.940 --> 00:07:16.630
+Sai Ram Vodnala: Here.
+
+91
+00:07:17.550 --> 00:07:24.600
+Bibek Adhikari: No, not that one. So total attempts. It's a data set of 20. Yep on the top. Can you see? Total attempts
+
+92
+00:07:24.880 --> 00:07:26.020
+Bibek Adhikari: the second one.
+
+93
+00:07:26.430 --> 00:07:29.150
+Bibek Adhikari: Oh, don't you scroll! You scroll down!
+
+94
+00:07:31.880 --> 00:07:33.339
+Bibek Adhikari: Can you scroll down again.
+
+95
+00:07:34.410 --> 00:07:35.100
+Sai Ram Vodnala: Thank you.
+
+96
+00:07:36.210 --> 00:07:37.040
+Bibek Adhikari: Hold on.
+
+97
+00:07:38.180 --> 00:07:42.989
+Bibek Adhikari: Yep, the just above the values above values.
+
+98
+00:07:43.450 --> 00:07:44.740
+Sai Ram Vodnala: Yeah. Don't matters.
+
+99
+00:07:45.300 --> 00:07:50.590
+Bibek Adhikari: Yeah, open up the total items and go to like
+
+100
+00:07:50.790 --> 00:07:53.610
+Bibek Adhikari: the type. Count. Right? So that's the type. Count
+
+101
+00:07:54.330 --> 00:07:57.739
+Bibek Adhikari: and see the type count as well as
+
+102
+00:07:58.080 --> 00:08:02.710
+Bibek Adhikari: can. You see the type found and the replication.
+
+103
+00:08:03.160 --> 00:08:11.569
+Sai Ram Vodnala: Yeah, those are not different. The preparation is like one to 50. Only type count is entirely different. That is the purpose of creating the covariate.
+
+104
+00:08:12.270 --> 00:08:13.100
+Bibek Adhikari: Okay.
+
+105
+00:08:13.520 --> 00:08:14.210
+Sai Ram Vodnala: See.
+
+106
+00:08:15.070 --> 00:08:15.490
+Bibek Adhikari: Oh, yeah.
+
+107
+00:08:15.490 --> 00:08:19.270
+Sai Ram Vodnala: It's entirely suppose example, you can see this 2, 39, right?
+
+108
+00:08:20.560 --> 00:08:25.540
+Sai Ram Vodnala: If you see the same column of reputation 6, 39.
+
+109
+00:08:26.090 --> 00:08:30.109
+Bibek Adhikari: Okay, like, when I was running, it was so showing the same.
+
+110
+00:08:30.270 --> 00:08:36.750
+Bibek Adhikari: I mean, like the same number at that time. I didn't like, okay.
+
+111
+00:08:36.750 --> 00:08:42.390
+Sai Ram Vodnala: No, no, it's okay, no problem. So I already created the new one. Let me explain. You.
+
+112
+00:08:42.620 --> 00:08:43.620
+Bibek Adhikari: Okay. Sure.
+
+113
+00:08:48.080 --> 00:08:50.980
+Sai Ram Vodnala: Okay, so this is the new one.
+
+114
+00:08:51.800 --> 00:08:54.649
+Sai Ram Vodnala: I created as per the task force.
+
+115
+00:08:55.640 --> 00:09:02.560
+Sai Ram Vodnala: 1st task is to create the covariate. So to create the covariate, we use like total attempts, the same.
+
+116
+00:09:03.680 --> 00:09:06.440
+Sai Ram Vodnala: the summation, we using the typing count right.
+
+117
+00:09:07.280 --> 00:09:13.185
+Sai Ram Vodnala: Then, instead of checking directly box plot, I remove. We are filtering only there
+
+118
+00:09:13.530 --> 00:09:13.910
+Bibek Adhikari: 31.
+
+119
+00:09:13.910 --> 00:09:14.820
+Sai Ram Vodnala: 20 columns.
+
+120
+00:09:15.040 --> 00:09:17.100
+Bibek Adhikari: Right right, top, 20.
+
+121
+00:09:17.130 --> 00:09:21.659
+Sai Ram Vodnala: Top 20, in the sense, is not one to 11 to 20. It's last 31 to 40.
+
+122
+00:09:21.860 --> 00:09:23.459
+Bibek Adhikari: Yeah, I got that one right?
+
+123
+00:09:23.460 --> 00:09:26.989
+Sai Ram Vodnala: So what what is the reason behind selecting those? Do you have any idea.
+
+124
+00:09:26.990 --> 00:09:42.020
+Bibek Adhikari: So the reason one of the reason is like, 1st 31st attempt. According to the professor, he said, that just select the upper one, because for the 1st 31, probably the people are learning how to type, or probably they are just.
+
+125
+00:09:42.020 --> 00:09:51.730
+Sai Ram Vodnala: Yeah, perfect, perfect. Yeah, we've got it. Yeah, that's that's the reason we are selecting 31. Then if you go to see the Eda for filtered subjects.
+
+126
+00:09:52.390 --> 00:09:55.850
+Sai Ram Vodnala: So when we apply this we'll get okay. I'll run now.
+
+127
+00:09:56.090 --> 00:09:56.780
+Bibek Adhikari: Okay.
+
+128
+00:09:58.480 --> 00:10:03.499
+Bibek Adhikari: yeah, you can clear your environment. Probably it will be slower, and we can just rerun everything right now.
+
+129
+00:10:04.010 --> 00:10:06.570
+Sai Ram Vodnala: Okay. I'm not sure how to clean it.
+
+130
+00:10:06.570 --> 00:10:10.579
+Bibek Adhikari: So there is the broom. Can you see the broom?
+
+131
+00:10:13.090 --> 00:10:15.190
+Bibek Adhikari: And now you can run the
+
+132
+00:10:15.560 --> 00:10:18.909
+Bibek Adhikari: chunks. Just do a single run at a time. Okay.
+
+133
+00:10:19.350 --> 00:10:20.879
+Sai Ram Vodnala: It would be easier.
+
+134
+00:10:23.390 --> 00:10:27.090
+Sai Ram Vodnala: So this is better than account.
+
+135
+00:10:29.080 --> 00:10:33.100
+Sai Ram Vodnala: Then this is the box plots for only 4 subjects.
+
+136
+00:10:33.780 --> 00:10:35.080
+Sai Ram Vodnala: This is not defined.
+
+137
+00:10:35.200 --> 00:10:37.040
+Bibek Adhikari: Model data not defined.
+
+138
+00:10:43.193 --> 00:10:47.569
+Bibek Adhikari: I think you did not run the model data. So can you rerun model data first.st
+
+139
+00:10:47.830 --> 00:10:48.719
+Sai Ram Vodnala: Yeah, I don't.
+
+140
+00:10:48.720 --> 00:10:51.469
+Bibek Adhikari: Oh, okay. Now, it seems like it's working. Okay, perfect.
+
+141
+00:10:52.345 --> 00:10:57.910
+Sai Ram Vodnala: So from this I'm not sure like what we can conclude, but we can write some insights right.
+
+142
+00:10:57.910 --> 00:11:05.200
+Bibek Adhikari: So yeah, for this one. What I was planning is like, even like taking the top a top 20 in a sense like the later 20.
+
+143
+00:11:06.450 --> 00:11:14.479
+Bibek Adhikari: I mean, what's it? The type typing data set? We still observe, there are few of the we can say that there are a few of the outliers.
+
+144
+00:11:15.540 --> 00:11:16.140
+Sai Ram Vodnala: Okay.
+
+145
+00:11:16.280 --> 00:11:25.619
+Bibek Adhikari: Even after like it's session 2. There is not completely absence of any outlier within the same subject. We can, Tom, something like that for each of them.
+
+146
+00:11:26.570 --> 00:11:26.895
+Sai Ram Vodnala: Okay?
+
+147
+00:11:27.340 --> 00:11:31.179
+Sai Ram Vodnala: Sounds good. Then going to task 2, we are building the regression model.
+
+148
+00:11:31.960 --> 00:11:35.060
+Sai Ram Vodnala: So we are just building a simple regression model.
+
+149
+00:11:35.710 --> 00:11:39.460
+Sai Ram Vodnala: Using total ud, and along with the typing count what it.
+
+150
+00:11:39.460 --> 00:11:43.490
+Bibek Adhikari: Yeah, it's it's linear model, right? It's not linear mixed model. Don't get confused. Okay.
+
+151
+00:11:43.740 --> 00:11:44.990
+Sai Ram Vodnala: Yeah, it's linear model.
+
+152
+00:11:46.280 --> 00:11:51.489
+Bibek Adhikari: So can we add like typing count as well as the session? Id, too?
+
+153
+00:11:51.720 --> 00:11:56.970
+Bibek Adhikari: What is the difference with the session? Id like even like with the change of the session. Id. There might be some
+
+154
+00:11:57.190 --> 00:11:58.920
+Bibek Adhikari: scenes in the model, too.
+
+155
+00:11:59.480 --> 00:12:03.909
+Sai Ram Vodnala: Yeah. But I tried that, even though we are getting a non norm link and everything the same.
+
+156
+00:12:06.500 --> 00:12:08.789
+Sai Ram Vodnala: So if you see this.
+
+157
+00:12:12.750 --> 00:12:14.099
+Sai Ram Vodnala: if I run this.
+
+158
+00:12:19.720 --> 00:12:24.330
+Sai Ram Vodnala: So this is ud model, Dd model and HD model H model.
+
+159
+00:12:24.980 --> 00:12:29.820
+Sai Ram Vodnala: So I have written the insights in white paper. No problem.
+
+160
+00:12:32.950 --> 00:12:33.850
+Sai Ram Vodnala: then.
+
+161
+00:12:36.530 --> 00:12:40.989
+Sai Ram Vodnala: So for the normality check. We are considering only 4 subjects.
+
+162
+00:12:41.829 --> 00:12:42.359
+Bibek Adhikari: Right.
+
+163
+00:12:43.010 --> 00:12:43.940
+Sai Ram Vodnala: Did you got it?
+
+164
+00:12:44.130 --> 00:12:44.720
+Bibek Adhikari: Yeah.
+
+165
+00:12:44.940 --> 00:12:46.490
+Sai Ram Vodnala: But so, while it's not only.
+
+166
+00:12:46.490 --> 00:12:47.450
+Bibek Adhikari: Normality.
+
+167
+00:12:48.006 --> 00:12:56.909
+Bibek Adhikari: For building the model, we consider the entire data set. But for, like Eda, and showing the results, we have considered 4 subjects.
+
+168
+00:12:56.910 --> 00:12:58.330
+Sai Ram Vodnala: Yeah, exactly. Exactly.
+
+169
+00:12:58.627 --> 00:13:14.079
+Bibek Adhikari: So yeah, because, like, we just don't want to neglect the entire data, set that we have filter so that in order to make the model. It's convenient to use everything what we have, and pursuing the result, because, as we cannot, so everything at the same time, we just.
+
+170
+00:13:14.080 --> 00:13:14.490
+Sai Ram Vodnala: Yes.
+
+171
+00:13:14.490 --> 00:13:16.829
+Bibek Adhikari: So chosen like 4 subjects.
+
+172
+00:13:17.090 --> 00:13:18.150
+Sai Ram Vodnala: Yeah, perfect.
+
+173
+00:13:18.460 --> 00:13:22.370
+Sai Ram Vodnala: That's why I consider this so first, st directly we are checking.
+
+174
+00:13:22.560 --> 00:13:26.170
+Sai Ram Vodnala: This is so Shapiro results.
+
+175
+00:13:27.640 --> 00:13:32.650
+Sai Ram Vodnala: So from the shape road results. It's clearly here. I applied Fdr. As well.
+
+176
+00:13:33.890 --> 00:13:38.710
+Sai Ram Vodnala: This is a P value. This is Ftr adjust value. So if you if you want, we can.
+
+177
+00:13:40.170 --> 00:13:48.870
+Sai Ram Vodnala: you can see the results separately. If you want here. But no need. You can see directly this Fdr registered P value. But still it's not normal. Okay.
+
+178
+00:13:49.870 --> 00:13:53.410
+Sai Ram Vodnala: After applying Fdr. Still, it is not normal.
+
+179
+00:13:53.720 --> 00:13:57.429
+Sai Ram Vodnala: Then we are checking to Qq. Plot.
+
+180
+00:13:58.330 --> 00:14:00.490
+Sai Ram Vodnala: So this is Qq. Plot for.
+
+181
+00:14:01.990 --> 00:14:04.339
+Bibek Adhikari: Later models whatsoever.
+
+182
+00:14:22.060 --> 00:14:23.760
+Sai Ram Vodnala: This filter models.
+
+183
+00:14:39.680 --> 00:14:40.910
+Sai Ram Vodnala: one.
+
+184
+00:14:51.170 --> 00:14:54.289
+Bibek Adhikari: So, yeah, have you run that code? Can you scroll, scroll up.
+
+185
+00:14:55.260 --> 00:14:56.080
+Sai Ram Vodnala: This core.
+
+186
+00:14:56.815 --> 00:14:57.300
+Bibek Adhikari: Children.
+
+187
+00:14:57.300 --> 00:14:58.280
+Sai Ram Vodnala: Their models.
+
+188
+00:14:58.280 --> 00:15:00.320
+Sai Ram Vodnala: Yeah, have you run this one.
+
+189
+00:15:00.690 --> 00:15:01.219
+Bibek Adhikari: Can it all?
+
+190
+00:15:01.220 --> 00:15:02.600
+Bibek Adhikari: No, I didn't. I.
+
+191
+00:15:04.300 --> 00:15:05.999
+Sai Ram Vodnala: So shall I copy this first.st
+
+192
+00:15:06.500 --> 00:15:16.059
+Bibek Adhikari: So that's the normalities. Hold on! Hold on, filter model. Actually, can you scroll up?
+
+193
+00:15:18.300 --> 00:15:21.669
+Bibek Adhikari: So is this the code that I go through earlier.
+
+194
+00:15:23.160 --> 00:15:24.720
+Bibek Adhikari: Can you scroll all the way up
+
+195
+00:15:27.488 --> 00:15:30.570
+Bibek Adhikari: go to the second or 3rd chunk of the code.
+
+196
+00:15:31.850 --> 00:15:32.640
+Sai Ram Vodnala: This one.
+
+197
+00:15:32.640 --> 00:15:39.519
+Bibek Adhikari: No, I mean the second or 3rd song means the Ronnieville song scroll the way up
+
+198
+00:15:44.570 --> 00:15:45.690
+Bibek Adhikari: all the way.
+
+199
+00:15:51.990 --> 00:15:54.410
+Bibek Adhikari: Okay, can you go? Yeah, before this one.
+
+200
+00:15:55.810 --> 00:15:59.460
+Bibek Adhikari: What is there? Okay, so this particular one, let's see.
+
+201
+00:16:00.440 --> 00:16:07.140
+Bibek Adhikari: So is there any Tom like, create a single graph with individual box, but very specific subjects for Eda.
+
+202
+00:16:08.023 --> 00:16:16.529
+Bibek Adhikari: I think this was without clearing. So can you go to the next song next chunk of call
+
+203
+00:16:20.070 --> 00:16:26.840
+Bibek Adhikari: hold on so model data. That's the model data. So after that, what is there?
+
+204
+00:16:27.550 --> 00:16:30.589
+Bibek Adhikari: So Ed, for future.
+
+205
+00:16:30.590 --> 00:16:32.259
+Sai Ram Vodnala: Less filters, this box plots.
+
+206
+00:16:32.260 --> 00:16:34.579
+Bibek Adhikari: Okay. So after this, what is there? Hold on.
+
+207
+00:16:34.580 --> 00:16:37.499
+Sai Ram Vodnala: This is model regression, mode.
+
+208
+00:16:38.330 --> 00:16:41.525
+Bibek Adhikari: Okay, object. Okay, so this is a regression analysis.
+
+209
+00:16:43.660 --> 00:16:45.370
+Bibek Adhikari: Okay, below this one.
+
+210
+00:16:47.850 --> 00:16:49.270
+Bibek Adhikari: Okay, hold on here.
+
+211
+00:16:50.540 --> 00:16:54.939
+Bibek Adhikari: Normality assessment. So this was for normality assessment. So can we scroll down?
+
+212
+00:16:57.570 --> 00:17:02.899
+Bibek Adhikari: Okay, yeah, filter models is right here. Yeah, I think this code need to be copied too.
+
+213
+00:17:04.670 --> 00:17:05.930
+Sai Ram Vodnala: Okay.
+
+214
+00:17:09.579 --> 00:17:13.329
+Sai Ram Vodnala: But what what this is doing? I'm not still getting.
+
+215
+00:17:13.819 --> 00:17:18.129
+Bibek Adhikari: So it is just filtering the model again.
+
+216
+00:17:18.669 --> 00:17:23.069
+Bibek Adhikari: taking the total attempts. And it's filtering the subjects with subjects
+
+217
+00:17:24.680 --> 00:17:30.290
+Bibek Adhikari: earlier model has everything on it right? So again, second round was done for this one.
+
+218
+00:17:30.510 --> 00:17:31.910
+Sai Ram Vodnala: Yeah, I got it. Got it.
+
+219
+00:17:34.220 --> 00:17:36.539
+Sai Ram Vodnala: I use somewhere here filtering.
+
+220
+00:17:59.590 --> 00:18:02.619
+Sai Ram Vodnala: But here the model is different. Right? We used
+
+221
+00:18:15.470 --> 00:18:16.360
+Sai Ram Vodnala: Hello.
+
+222
+00:18:17.024 --> 00:18:18.790
+Bibek Adhikari: Yeah, the model is different. Right?
+
+223
+00:18:20.460 --> 00:18:22.320
+Sai Ram Vodnala: So I need to change that as well. Right?
+
+224
+00:18:22.320 --> 00:18:23.960
+Bibek Adhikari: Yeah, it need to be changed. Right?
+
+225
+00:18:26.780 --> 00:18:27.690
+Sai Ram Vodnala: Okay?
+
+226
+00:18:28.047 --> 00:18:31.860
+Sai Ram Vodnala: Copy. Yeah, you can copy everything. And you can change the model.
+
+227
+00:18:32.380 --> 00:18:37.599
+Bibek Adhikari: And keeping the other. I think if you haven't seen most of the thing probably it should be working.
+
+228
+00:18:53.000 --> 00:18:53.710
+Sai Ram Vodnala: Muted.
+
+229
+00:18:54.340 --> 00:18:56.870
+Sai Ram Vodnala: So we're mapping that route.
+
+230
+00:18:57.080 --> 00:18:57.690
+Sai Ram Vodnala: I'm not sure.
+
+231
+00:18:57.690 --> 00:19:04.600
+Bibek Adhikari: So, yeah, this this is using replication plus session index. So you just need to change it to the earlier previous code.
+
+232
+00:19:06.290 --> 00:19:09.379
+Sai Ram Vodnala: What were the code that you used?
+
+233
+00:19:09.380 --> 00:19:11.079
+Sai Ram Vodnala: Yeah, already? It's mutated right?
+
+234
+00:19:11.760 --> 00:19:13.530
+Bibek Adhikari: Oh, yeah, it's already mutated.
+
+235
+00:19:22.820 --> 00:19:25.949
+Sai Ram Vodnala: Oh, okay, models is equal to total
+
+236
+00:19:26.160 --> 00:19:29.229
+Sai Ram Vodnala: group. We already created a group by regression.
+
+237
+00:19:53.640 --> 00:19:56.080
+Sai Ram Vodnala: Very sad, like, I'm not sure.
+
+238
+00:20:11.110 --> 00:20:15.619
+Sai Ram Vodnala: Okay, I got it mute it. We need to just change the mute. It.
+
+239
+00:20:16.130 --> 00:20:16.840
+Bibek Adhikari: Okay.
+
+240
+00:20:17.590 --> 00:20:19.370
+Sai Ram Vodnala: Subject, next part, not it.
+
+241
+00:20:39.760 --> 00:20:52.150
+Bibek Adhikari: And do not change everything. So if you change everything, probably there will be some errors, so just don't change the residuals and fitted. So I think we'll be using the residuals versus fitted again. Sorry.
+
+242
+00:20:52.150 --> 00:20:57.850
+Sai Ram Vodnala: Yeah, I think not. This one. We need to copy this one muted.
+
+243
+00:21:04.800 --> 00:21:16.409
+Bibek Adhikari: I don't think that is the one side, because the lower one, it's the mapping of the data with the linear model, right? So I think, just copy the linear model that you have used ever
+
+244
+00:21:16.650 --> 00:21:18.359
+Bibek Adhikari: do not change anything else.
+
+245
+00:21:19.420 --> 00:21:20.270
+Sai Ram Vodnala: This one.
+
+246
+00:21:20.889 --> 00:21:29.170
+Bibek Adhikari: Actually hold on. So after map hold on. So after map on 119. So there is data.
+
+247
+00:21:29.320 --> 00:21:34.120
+Bibek Adhikari: So copy from data no 190
+
+248
+00:21:34.250 --> 00:21:38.529
+Bibek Adhikari: number 190 copy from map like data after map.
+
+249
+00:21:39.260 --> 00:21:40.110
+Bibek Adhikari: Hold on.
+
+250
+00:21:40.500 --> 00:21:48.820
+Bibek Adhikari: Yep, right there, and copy up to Dot X and the 1st parenthesis.
+
+251
+00:21:49.430 --> 00:21:50.290
+Sai Ram Vodnala: Okay.
+
+252
+00:21:55.110 --> 00:21:56.160
+Bibek Adhikari: Scroll down.
+
+253
+00:21:59.870 --> 00:22:07.799
+Bibek Adhikari: And here, too, just since. Hold on. So I think. Where did you copied it from? Like, from data or from lm.
+
+254
+00:22:09.290 --> 00:22:14.739
+Bibek Adhikari: was that from data? Yeah. So go up to the dot X and 1st parenthesis
+
+255
+00:22:14.930 --> 00:22:16.980
+Bibek Adhikari: and paste in place of it.
+
+256
+00:22:19.110 --> 00:22:19.660
+Sai Ram Vodnala: Okay.
+
+257
+00:22:22.520 --> 00:22:23.860
+Bibek Adhikari: So similarly
+
+258
+00:22:24.910 --> 00:22:29.969
+Bibek Adhikari: so, for did it? You just don't need to go above. I can see like what's the difference now?
+
+259
+00:22:32.480 --> 00:22:33.610
+Sai Ram Vodnala: Yeah, I got it.
+
+260
+00:23:08.700 --> 00:23:10.160
+Sai Ram Vodnala: Oh, it's not changed.
+
+261
+00:23:26.190 --> 00:23:29.269
+Sai Ram Vodnala: Okay, it will select some of those.
+
+262
+00:23:30.470 --> 00:23:31.430
+Sai Ram Vodnala: Yeah.
+
+263
+00:23:32.590 --> 00:23:37.809
+Bibek Adhikari: I think there is one error with the bracket. I think there is ex extra one bracket required
+
+264
+00:23:38.560 --> 00:23:40.329
+Bibek Adhikari: closing bracket, probably.
+
+265
+00:23:44.690 --> 00:23:46.730
+Sai Ram Vodnala: Oh, right here.
+
+266
+00:23:49.530 --> 00:23:51.580
+Sai Ram Vodnala: Okay. Shall I run this.
+
+267
+00:24:02.570 --> 00:24:08.199
+Bibek Adhikari: So error in muted in argument. This one group subject caused by error in math index one.
+
+268
+00:24:13.610 --> 00:24:15.589
+Bibek Adhikari: So it's still saying the error.
+
+269
+00:24:21.730 --> 00:24:22.510
+Sai Ram Vodnala: Yeah.
+
+270
+00:24:32.450 --> 00:24:40.250
+Sai Ram Vodnala: I don't know. Like, when I found it, I did not clear the environment. That's why I got the results are wrong. I guess.
+
+271
+00:24:41.110 --> 00:24:49.120
+Bibek Adhikari: Yep, so yeah, like each with the each row, you need to clear the environment otherwise
+
+272
+00:24:50.100 --> 00:24:52.159
+Bibek Adhikari: and the save thing, it will just.
+
+273
+00:24:55.080 --> 00:24:57.999
+Sai Ram Vodnala: Okay, so what should I do now?
+
+274
+00:24:58.170 --> 00:25:04.109
+Sai Ram Vodnala: So instead of plotting, shall we just show the chapiel test.
+
+275
+00:25:05.050 --> 00:25:07.220
+Bibek Adhikari: I think we need to have a doctor right?
+
+276
+00:25:07.400 --> 00:25:10.849
+Sai Ram Vodnala: Yeah, so it's better to show the plot instead of instead of
+
+277
+00:25:10.850 --> 00:25:15.090
+Sai Ram Vodnala: no problem. Let's find out. Just just give me a minute. I'll I'll find out no problem.
+
+278
+00:25:15.090 --> 00:25:15.650
+Bibek Adhikari: Okay?
+
+279
+00:25:35.330 --> 00:25:38.680
+Bibek Adhikari: Or I can see you. You are just changing the model in
+
+280
+00:25:39.930 --> 00:25:46.410
+Bibek Adhikari: like the newly generated code. Right? So probably we can replace the model in that one, too.
+
+281
+00:25:47.790 --> 00:25:49.170
+Sai Ram Vodnala: Yeah, that's what I'm doing.
+
+282
+00:26:03.590 --> 00:26:05.919
+Bibek Adhikari: And make sure you have the backup. Otherwise.
+
+283
+00:26:06.260 --> 00:26:07.289
+Sai Ram Vodnala: Yeah, yeah, I do.
+
+284
+00:26:07.290 --> 00:26:09.800
+Bibek Adhikari: Okay, everything is gone.
+
+285
+00:26:10.100 --> 00:26:11.480
+Bibek Adhikari: There might be a problem.
+
+286
+00:29:32.750 --> 00:29:34.350
+Sai Ram Vodnala: Can you able to see my screen.
+
+287
+00:29:34.580 --> 00:29:36.030
+Bibek Adhikari: Yeah, I can see your screen.
+
+288
+00:29:36.450 --> 00:29:41.699
+Sai Ram Vodnala: Did you absorb these view results for one subject? So this result is for one subject actually.
+
+289
+00:29:43.860 --> 00:29:45.040
+Bibek Adhikari: I think so.
+
+290
+00:29:45.040 --> 00:29:51.069
+Sai Ram Vodnala: Yeah. Even in your case. Also, it's the same. See? Summary for Ud model 1, 1 indicates one subject.
+
+291
+00:29:52.480 --> 00:29:55.859
+Bibek Adhikari: No, it's not one subject. Actually, it's for the entire subjects.
+
+292
+00:29:56.890 --> 00:30:02.909
+Bibek Adhikari: not for a single subject. So because, like if it says one subject. That is because, like, we have
+
+293
+00:30:03.650 --> 00:30:09.500
+Bibek Adhikari: like every of the sub subjects, and their data was used for building the model.
+
+294
+00:30:11.360 --> 00:30:13.329
+Bibek Adhikari: and is the resultant from that one.
+
+295
+00:30:15.900 --> 00:30:18.609
+Sai Ram Vodnala: This is, this is summary of all subjects.
+
+296
+00:30:18.610 --> 00:30:23.309
+Bibek Adhikari: Yeah, it's for the Ud. Model entire. Ud model. Right? Summary for the all subjects.
+
+297
+00:30:27.960 --> 00:30:28.730
+Sai Ram Vodnala: Okay.
+
+298
+00:30:31.570 --> 00:30:33.680
+Sai Ram Vodnala: So I think I need to add this column
+
+299
+00:30:36.860 --> 00:30:37.690
+Sai Ram Vodnala: right?
+
+300
+00:30:41.660 --> 00:30:45.069
+Bibek Adhikari: I'm not sure if addition of that will provide something.
+
+301
+00:30:56.720 --> 00:30:59.850
+Bibek Adhikari: You have already muted it. That one, right? So there is the phone.
+
+302
+00:31:04.310 --> 00:31:05.759
+Bibek Adhikari: you December. It's also.
+
+303
+00:31:05.760 --> 00:31:07.529
+Sai Ram Vodnala: Summary. Summary. Yes.
+
+304
+00:31:08.110 --> 00:31:10.129
+Bibek Adhikari: So it's already there. No need to add that one
+
+305
+00:31:11.340 --> 00:31:12.890
+Bibek Adhikari: anything you need to add that.
+
+306
+00:31:17.510 --> 00:31:20.360
+Sai Ram Vodnala: But I'm not sure like why it is.
+
+307
+00:31:45.530 --> 00:31:47.499
+Sai Ram Vodnala: This is for not for one subject. Then.
+
+308
+00:31:47.500 --> 00:31:50.859
+Bibek Adhikari: No, it's not for one subject. It's for a single model.
+
+309
+00:31:51.480 --> 00:31:58.150
+Sai Ram Vodnala: Okay, okay, no problem. I wish for clearing this. I want to. Okay.
+
+310
+00:32:12.810 --> 00:32:14.519
+Bibek Adhikari: So what are you trying to do now?
+
+311
+00:32:15.890 --> 00:32:18.950
+Sai Ram Vodnala: That Qq. Plots, fixing the cookbooks.
+
+312
+00:32:22.180 --> 00:32:27.969
+Bibek Adhikari: So what is the necessity for fixing the this one, or the later one, which one was providing the error?
+
+313
+00:32:28.520 --> 00:32:31.370
+Bibek Adhikari: So is this the same like that was providing the error.
+
+314
+00:32:33.560 --> 00:32:34.760
+Sai Ram Vodnala: Just a minute.
+
+315
+00:32:40.210 --> 00:32:40.980
+Sai Ram Vodnala: Cool.
+
+316
+00:34:26.320 --> 00:34:28.130
+Sai Ram Vodnala: Okay, I got the code.
+
+317
+00:35:24.410 --> 00:35:30.230
+Sai Ram Vodnala: Okay, something and filter for filters.
+
+318
+00:35:33.680 --> 00:35:35.700
+Sai Ram Vodnala: 1, 31 I have
+
+319
+00:36:12.830 --> 00:36:18.499
+Sai Ram Vodnala: like, now, we need to. Actually, we are we getting residuals in this models? No, right.
+
+320
+00:36:19.860 --> 00:36:20.519
+Sai Ram Vodnala: There are no.
+
+321
+00:36:20.520 --> 00:36:23.460
+Bibek Adhikari: I don't know, and we.
+
+322
+00:36:25.930 --> 00:36:28.930
+Sai Ram Vodnala: You're not getting any residual. That's why you're not getting Qq plot.
+
+323
+00:36:29.430 --> 00:36:30.519
+Sai Ram Vodnala: That's the issue.
+
+324
+00:36:33.660 --> 00:36:35.519
+Bibek Adhikari: Okay, so can you go back to my code.
+
+325
+00:36:37.430 --> 00:36:38.150
+Sai Ram Vodnala: Okay.
+
+326
+00:36:40.170 --> 00:36:42.640
+Bibek Adhikari: Okay. Here. Can you scroll up.
+
+327
+00:36:43.150 --> 00:36:43.990
+Sai Ram Vodnala: Okay.
+
+328
+00:36:43.990 --> 00:36:45.970
+Bibek Adhikari: So can you go to Ron first.st
+
+329
+00:36:46.830 --> 00:36:47.400
+Sai Ram Vodnala: Haran.
+
+330
+00:36:47.400 --> 00:36:49.140
+Bibek Adhikari: There is the run option right?
+
+331
+00:36:49.550 --> 00:36:50.130
+Sai Ram Vodnala: Yeah.
+
+332
+00:36:51.350 --> 00:36:55.540
+Bibek Adhikari: Click! The lower bottom on right next to Ron.
+
+333
+00:36:56.900 --> 00:36:57.620
+Sai Ram Vodnala: This one.
+
+334
+00:36:57.800 --> 00:37:03.709
+Bibek Adhikari: Can you? No where? Yep, no, no, don't run this one. Can you go all the way up.
+
+335
+00:37:03.940 --> 00:37:06.820
+Bibek Adhikari: little up? There is the word RUN.
+
+336
+00:37:08.320 --> 00:37:09.150
+Sai Ram Vodnala: This one.
+
+337
+00:37:09.320 --> 00:37:12.889
+Bibek Adhikari: Yeah, and just go to restart R and clear output.
+
+338
+00:37:14.300 --> 00:37:17.319
+Bibek Adhikari: No, I mean restart R and clear the output.
+
+339
+00:37:20.340 --> 00:37:25.630
+Bibek Adhikari: All right. Now, let's go to the model that you have since. So instead of
+
+340
+00:37:26.630 --> 00:37:30.650
+Bibek Adhikari: okay in this model, can you go to the 1st chunk of the call.
+
+341
+00:37:33.780 --> 00:37:35.870
+Sai Ram Vodnala: So you're saying what you are, this one.
+
+342
+00:37:36.560 --> 00:37:39.970
+Bibek Adhikari: Yeah, go to the 1st chunk of the code. Yeah. After this.
+
+343
+00:37:40.360 --> 00:37:40.750
+Sai Ram Vodnala: Okay.
+
+344
+00:37:40.750 --> 00:37:42.059
+Bibek Adhikari: After this.
+
+345
+00:37:42.170 --> 00:37:44.970
+Bibek Adhikari: So let's not say anything over there.
+
+346
+00:37:45.110 --> 00:37:50.979
+Bibek Adhikari: Okay, you ran that. Okay, that's fine. Can you scroll down and hold on, hold on before running.
+
+347
+00:37:51.270 --> 00:37:52.240
+Bibek Adhikari: Let's see.
+
+348
+00:37:53.350 --> 00:37:55.399
+Bibek Adhikari: Okay, you can run that one, too.
+
+349
+00:37:57.220 --> 00:37:57.980
+Sai Ram Vodnala: Okay.
+
+350
+00:38:01.030 --> 00:38:02.579
+Bibek Adhikari: And scroll down.
+
+351
+00:38:04.950 --> 00:38:13.280
+Sai Ram Vodnala: Okay, yeah, I think we need to install package on it here. This one.
+
+352
+00:38:14.940 --> 00:38:16.219
+Bibek Adhikari: You're on that one.
+
+353
+00:38:16.660 --> 00:38:18.030
+Sai Ram Vodnala: It's a disposit.
+
+354
+00:38:19.510 --> 00:38:20.240
+Bibek Adhikari: What's that?
+
+355
+00:38:20.970 --> 00:38:24.270
+Bibek Adhikari: This is the box that's fine scroll down
+
+356
+00:38:24.510 --> 00:38:27.390
+Bibek Adhikari: and run this one. So this is the data filtering.
+
+357
+00:38:29.820 --> 00:38:34.869
+Bibek Adhikari: And again, this is the box. But you can run this one, too. That's fine. No worries
+
+358
+00:38:41.910 --> 00:38:43.289
+Bibek Adhikari: that can be ran to.
+
+359
+00:38:49.050 --> 00:38:51.070
+Bibek Adhikari: You can run that, Ed.
+
+360
+00:38:52.400 --> 00:38:54.319
+Bibek Adhikari: So you have already ran this one right.
+
+361
+00:38:55.410 --> 00:38:56.010
+Sai Ram Vodnala: Yeah.
+
+362
+00:38:56.010 --> 00:38:57.910
+Bibek Adhikari: So, yeah, around this this quarter.
+
+363
+00:39:05.780 --> 00:39:07.799
+Sai Ram Vodnala: Okay. So my question here is.
+
+364
+00:39:07.800 --> 00:39:10.530
+Sai Ram Vodnala: is this, is this correct or not? I don't know. Perfect.
+
+365
+00:39:10.930 --> 00:39:21.789
+Bibek Adhikari: So I also don't know what I am suggesting you is like. Instead of doing Lm, total ud time equivalent to replication. Change that rep to the type. Count.
+
+366
+00:39:23.100 --> 00:39:24.420
+Sai Ram Vodnala: Just rip.
+
+367
+00:39:24.420 --> 00:39:25.580
+Bibek Adhikari: Rdp as well.
+
+368
+00:39:26.016 --> 00:39:29.750
+Bibek Adhikari: You can do the session index, or let's not change the session index
+
+369
+00:39:30.151 --> 00:39:36.389
+Bibek Adhikari: change that with the type, count, or you can change the session index, too. That's fine. You can delete that. And change that code to yours.
+
+370
+00:39:36.650 --> 00:39:37.849
+Bibek Adhikari: You got what I mean.
+
+371
+00:39:38.260 --> 00:39:39.180
+Sai Ram Vodnala: Yeah, I got it.
+
+372
+00:39:42.420 --> 00:39:43.930
+Sai Ram Vodnala: Where is typing? Count?
+
+373
+00:39:47.620 --> 00:39:50.190
+Sai Ram Vodnala: Okay, just be with me. Yes.
+
+374
+00:39:51.640 --> 00:39:52.510
+Sai Ram Vodnala: Oh.
+
+375
+00:39:59.250 --> 00:40:00.899
+Sai Ram Vodnala: shall I keep session index?
+
+376
+00:40:01.130 --> 00:40:02.130
+Bibek Adhikari: Yeah, you can.
+
+377
+00:40:04.370 --> 00:40:07.260
+Bibek Adhikari: We can see, like what what? It will change. Right?
+
+378
+00:40:07.570 --> 00:40:12.200
+Bibek Adhikari: And yeah, can. Yeah, can you run this code? Now, this song, of course.
+
+379
+00:40:14.350 --> 00:40:16.409
+Sai Ram Vodnala: Yeah, we got some different results.
+
+380
+00:40:16.710 --> 00:40:21.309
+Bibek Adhikari: So hold on! Hold on! Hold on! Can you go? Can you scroll up to the
+
+381
+00:40:22.230 --> 00:40:25.520
+Bibek Adhikari: if? Let's see like, is there any significance or not.
+
+382
+00:40:25.890 --> 00:40:33.538
+Bibek Adhikari: So for the 1st one linear model with type, count plus session index like it seems like
+
+383
+00:40:34.130 --> 00:40:42.069
+Bibek Adhikari: session index have some influence with the motto, add a
+
+384
+00:40:42.200 --> 00:40:44.950
+Bibek Adhikari: level of significance of 0 point 0 5.
+
+385
+00:40:45.680 --> 00:40:48.860
+Bibek Adhikari: Okay, interesting. Yep. There is some change with that one.
+
+386
+00:40:49.240 --> 00:40:53.789
+Sai Ram Vodnala: Okay, okay, let it be. We'll see the queue plats as well.
+
+387
+00:40:56.890 --> 00:41:01.760
+Bibek Adhikari: And hold on. You. Hold can hold on here. So can you change the replicates?
+
+388
+00:41:02.370 --> 00:41:04.749
+Bibek Adhikari: Can you just change the replicate to type? Count here, too.
+
+389
+00:41:04.750 --> 00:41:06.470
+Sai Ram Vodnala: Okay, okay, okay, got it.
+
+390
+00:41:09.480 --> 00:41:10.580
+Bibek Adhikari: Do that for all.
+
+391
+00:41:17.270 --> 00:41:19.270
+Sai Ram Vodnala: Oh, no, no, that's fine!
+
+392
+00:41:19.460 --> 00:41:21.249
+Bibek Adhikari: I wanted to change that right.
+
+393
+00:41:21.990 --> 00:41:23.619
+Bibek Adhikari: And now you can run this code.
+
+394
+00:41:27.000 --> 00:41:27.979
+Bibek Adhikari: Okay, that's.
+
+395
+00:41:27.980 --> 00:41:28.510
+Sai Ram Vodnala: Good evening.
+
+396
+00:41:28.510 --> 00:41:32.469
+Bibek Adhikari: That's just the filtering process. You do not get anything now. You can run the Qq. Plot.
+
+397
+00:41:34.175 --> 00:41:35.320
+Sai Ram Vodnala: Okay.
+
+398
+00:41:36.710 --> 00:41:39.689
+Bibek Adhikari: And here now you can run everything.
+
+399
+00:41:39.690 --> 00:41:40.769
+Sai Ram Vodnala: Yeah. And all the good thing.
+
+400
+00:41:40.770 --> 00:41:41.799
+Bibek Adhikari: Should be running.
+
+401
+00:41:42.800 --> 00:41:49.670
+Bibek Adhikari: Yeah, it's running fine. Perfectly fine. Can you scroll down? Yeah, you can run this one, too. I think this is for Dd model.
+
+402
+00:41:50.250 --> 00:41:51.020
+Sai Ram Vodnala: Yeah.
+
+403
+00:41:51.350 --> 00:41:52.690
+Bibek Adhikari: And now it should work.
+
+404
+00:41:53.570 --> 00:41:54.150
+Sai Ram Vodnala: Okay.
+
+405
+00:41:54.190 --> 00:41:59.909
+Bibek Adhikari: And now you can input the next song of code that you have filter, or you have used.
+
+406
+00:42:00.330 --> 00:42:02.090
+Sai Ram Vodnala: Okay, just a minute.
+
+407
+00:42:03.530 --> 00:42:07.530
+Bibek Adhikari: Yeah, copy all the things like, whatever you ran earlier.
+
+408
+00:42:09.780 --> 00:42:10.370
+Sai Ram Vodnala: This is.
+
+409
+00:42:10.370 --> 00:42:14.550
+Bibek Adhikari: Yeah, yeah. Separate work test. I think that that's the one right, whichever.
+
+410
+00:42:27.360 --> 00:42:29.980
+Sai Ram Vodnala: Shall I remove this residuals, or let it be.
+
+411
+00:42:29.980 --> 00:42:35.529
+Bibek Adhikari: We'll be using the residues right? Residuals for susputed pot. Or what was that? What's the plan?
+
+412
+00:42:36.720 --> 00:42:37.660
+Sai Ram Vodnala: We'll see
+
+413
+00:42:42.640 --> 00:42:44.040
+Sai Ram Vodnala: today. No sleeping.
+
+414
+00:42:48.690 --> 00:42:52.179
+Sai Ram Vodnala: Oh, okay, let me change here. First.st
+
+415
+00:42:52.410 --> 00:42:58.330
+Sai Ram Vodnala: Okay, okay. What
+
+416
+00:43:11.890 --> 00:43:13.940
+Sai Ram Vodnala: did we got residuals over here.
+
+417
+00:43:16.580 --> 00:43:19.649
+Bibek Adhikari: I think we have already ran the residios on the top one.
+
+418
+00:43:21.930 --> 00:43:24.280
+Sai Ram Vodnala: Few key plot is done.
+
+419
+00:43:29.100 --> 00:43:30.620
+Sai Ram Vodnala: Where is my code?
+
+420
+00:43:34.550 --> 00:43:36.429
+Bibek Adhikari: Somewhere around line 300.
+
+421
+00:43:38.620 --> 00:43:40.009
+Bibek Adhikari: I think this is the goal.
+
+422
+00:43:40.890 --> 00:43:41.620
+Sai Ram Vodnala: This one.
+
+423
+00:43:42.280 --> 00:43:46.369
+Bibek Adhikari: That one right, this one, not this one
+
+424
+00:43:48.320 --> 00:43:51.219
+Bibek Adhikari: after after this one after ud.
+
+425
+00:43:51.480 --> 00:43:54.560
+Sai Ram Vodnala: Yeah, to avoid this one. Yes.
+
+426
+00:43:54.870 --> 00:43:57.800
+Sai Ram Vodnala: I'm just checking. Is that everything is correct or not?
+
+427
+00:43:58.720 --> 00:44:00.879
+Sai Ram Vodnala: Okay. Edit on it.
+
+428
+00:44:03.600 --> 00:44:05.030
+Sai Ram Vodnala: For some reason.
+
+429
+00:44:08.880 --> 00:44:12.519
+Sai Ram Vodnala: Okay, I think we need to add.
+
+430
+00:44:27.460 --> 00:44:28.420
+Sai Ram Vodnala: I don't know.
+
+431
+00:44:42.360 --> 00:44:46.449
+Bibek Adhikari: So error in models. Udi attempt to select less than one
+
+432
+00:44:50.870 --> 00:44:52.939
+Bibek Adhikari: and then get index.
+
+433
+00:45:52.530 --> 00:45:55.930
+Sai Ram Vodnala: Okay, actually, we need to do the model here.
+
+434
+00:45:58.060 --> 00:45:58.990
+Bibek Adhikari: We need to what?
+
+435
+00:46:03.760 --> 00:46:07.429
+Sai Ram Vodnala: We need to create the model. It's already created right here.
+
+436
+00:46:07.430 --> 00:46:08.310
+Bibek Adhikari: Yeah.
+
+437
+00:46:08.720 --> 00:46:10.259
+Sai Ram Vodnala: Then why, it's not saying.
+
+438
+00:46:22.350 --> 00:46:26.580
+Bibek Adhikari: So what that specific chunk of code was doing? Can you recall me
+
+439
+00:46:30.470 --> 00:46:32.380
+Bibek Adhikari: the code that we just pasted
+
+440
+00:46:36.710 --> 00:46:38.460
+Bibek Adhikari: length 26.
+
+441
+00:46:42.870 --> 00:46:45.399
+Sai Ram Vodnala: That's index of for each subject.
+
+442
+00:46:46.530 --> 00:46:49.660
+Sai Ram Vodnala: Okay, let me add some more part of the quote here.
+
+443
+00:47:34.660 --> 00:47:37.740
+Sai Ram Vodnala: so shall we remove this session index, or let it be.
+
+444
+00:47:39.050 --> 00:47:44.180
+Bibek Adhikari: So you can try with the session next to I don't. I don't like it will have any changes.
+
+445
+00:47:45.000 --> 00:47:49.830
+Bibek Adhikari: even like changing that to typing count. There was no change at all. Right?
+
+446
+00:47:50.830 --> 00:47:55.950
+Bibek Adhikari: So I think the whichever model you are trying
+
+447
+00:47:56.340 --> 00:48:04.950
+Bibek Adhikari: none of them are significant. Because i, 1 of my friend was saying that he, Professor, is not looking for a model at all.
+
+448
+00:48:05.330 --> 00:48:10.064
+Bibek Adhikari: He's not constant with the model he's just concerned with how we are doing, and
+
+449
+00:48:10.650 --> 00:48:13.900
+Bibek Adhikari: like, if we can show the what was that?
+
+450
+00:48:14.390 --> 00:48:17.190
+Bibek Adhikari: The Fdr. Correction, or something like that or not?
+
+451
+00:48:18.090 --> 00:48:21.450
+Bibek Adhikari: So that's that's the caution. So.
+
+452
+00:48:24.640 --> 00:48:30.029
+Sai Ram Vodnala: Okay? Then, if we ignore this Qk plot, then we can go with my my thing.
+
+453
+00:48:31.449 --> 00:48:38.740
+Bibek Adhikari: But at least having Qq plot would be good idea to sow in the like presentation. Right?
+
+454
+00:48:39.970 --> 00:48:42.560
+Bibek Adhikari: Yeah. Anyway. Okay, just what we can do is like.
+
+455
+00:48:42.870 --> 00:48:49.550
+Sai Ram Vodnala: We'll just keep the pictures. But let it be. If he checks in detail in the code, we can do something.
+
+456
+00:48:51.770 --> 00:48:52.710
+Sai Ram Vodnala: It's okay.
+
+457
+00:48:55.080 --> 00:48:56.090
+Sai Ram Vodnala: What do you say?
+
+458
+00:48:57.070 --> 00:49:12.550
+Bibek Adhikari: So actually, what I think is like, let's make the presentation sex self explanatory so that he just don't need to come with our Rmd file, or the white paper. You know I I'm plan. I was thinking of that thing.
+
+459
+00:49:13.460 --> 00:49:14.820
+Bibek Adhikari: that particular thing.
+
+460
+00:49:19.530 --> 00:49:22.290
+Sai Ram Vodnala: Actually. Now, I removed this.
+
+461
+00:49:23.030 --> 00:49:27.239
+Sai Ram Vodnala: At least, I could have put the results. I mean, like.
+
+462
+00:49:32.400 --> 00:49:33.569
+Sai Ram Vodnala: okay, no problem.
+
+463
+00:49:39.630 --> 00:49:48.569
+Bibek Adhikari: To get the result. I think you can still get the result if you're on the entire code that was prepared by me. And if you're on your code you'll get some results over there. So
+
+464
+00:49:50.570 --> 00:49:52.687
+Bibek Adhikari: I think it will be running. But
+
+465
+00:49:53.650 --> 00:49:59.570
+Bibek Adhikari: that doesn't make any sense like because, like, we are just manipulating the things only right.
+
+466
+00:50:03.260 --> 00:50:05.410
+Sai Ram Vodnala: Yeah, we cannot do the manipulation here.
+
+467
+00:50:07.250 --> 00:50:10.360
+Sai Ram Vodnala: Yeah, that's what I'm thinking. So so
+
+468
+00:50:11.090 --> 00:50:14.040
+Sai Ram Vodnala: let's let's let's check this
+
+469
+00:50:14.370 --> 00:50:22.219
+Sai Ram Vodnala: this one. We'll try this. Now don't know what's the issue.
+
+470
+00:50:23.380 --> 00:50:29.249
+Sai Ram Vodnala: Should I remove this residual plots, or let it be.
+
+471
+00:50:29.730 --> 00:50:35.580
+Bibek Adhikari: So so have you run the residual plot yet, so can you run that one
+
+472
+00:50:36.880 --> 00:50:40.900
+Bibek Adhikari: the upper one upper Co. I mean that one right.
+
+473
+00:50:41.940 --> 00:50:44.250
+Sai Ram Vodnala: Okay, okay, these are working. Let it be.
+
+474
+00:50:44.380 --> 00:50:45.180
+Bibek Adhikari: Okay.
+
+475
+00:50:45.450 --> 00:50:46.740
+Sai Ram Vodnala: Okay. Then.
+
+476
+00:50:51.890 --> 00:50:56.229
+Bibek Adhikari: So there is some error, so you can see the cross mark mode here.
+
+477
+00:51:03.370 --> 00:51:06.130
+Sai Ram Vodnala: Okay. So from here, it's not working right record.
+
+478
+00:51:06.130 --> 00:51:09.160
+Bibek Adhikari: It was here. No, it was like 325, or somewhere.
+
+479
+00:51:09.910 --> 00:51:13.560
+Sai Ram Vodnala: So this is a shapiroval text distribution.
+
+480
+00:51:14.430 --> 00:51:16.299
+Sai Ram Vodnala: Yeah, the result is working right.
+
+481
+00:51:17.370 --> 00:51:19.539
+Sai Ram Vodnala: So if you use a gesture, it's not working.
+
+482
+00:51:19.880 --> 00:51:20.550
+Bibek Adhikari: Yeah.
+
+483
+00:51:21.210 --> 00:51:28.049
+Sai Ram Vodnala: No, it's working. See if if there are additional you are getting.
+
+484
+00:51:28.050 --> 00:51:43.610
+Bibek Adhikari: This was already working like this code was working like when I prepare, you know, like we just need to add like, my concern was to add the adjusted p-value for one of the subjects to show, like 480, or 580, something.
+
+485
+00:51:44.850 --> 00:51:45.340
+Sai Ram Vodnala: Hi.
+
+486
+00:51:45.340 --> 00:51:58.560
+Bibek Adhikari: P-values, because, like one of the question he had during our last presentation was to show adjusted p-value for at least 400 data. He said that 20
+
+487
+00:51:58.750 --> 00:52:02.280
+Bibek Adhikari: typing from each session right?
+
+488
+00:52:02.840 --> 00:52:08.440
+Bibek Adhikari: And if it's 20 typing, that means we do have 3 different models, right?
+
+489
+00:52:08.640 --> 00:52:10.360
+Bibek Adhikari: 20 times 3 would make.
+
+490
+00:52:10.960 --> 00:52:11.690
+Sai Ram Vodnala: Okay.
+
+491
+00:52:11.690 --> 00:52:12.500
+Bibek Adhikari: 60.
+
+492
+00:52:12.910 --> 00:52:13.430
+Sai Ram Vodnala: 16.
+
+493
+00:52:13.830 --> 00:52:16.680
+Bibek Adhikari: 60 times 8 would make.
+
+494
+00:52:18.390 --> 00:52:19.679
+Sai Ram Vodnala: 40 40 80.
+
+495
+00:52:19.680 --> 00:52:25.559
+Bibek Adhikari: Yeah. So that is his constant. So I was just trying to make that as 4 80 different p-values
+
+496
+00:52:26.070 --> 00:52:28.330
+Bibek Adhikari: and Fdr corrected p-values.
+
+497
+00:52:28.640 --> 00:52:34.019
+Sai Ram Vodnala: So what we can do is now we can Fdr adjusted state is working.
+
+498
+00:52:34.830 --> 00:52:36.399
+Sai Ram Vodnala: So still, it's normal.
+
+499
+00:52:36.510 --> 00:52:39.330
+Sai Ram Vodnala: So so we are going to apply log transformation.
+
+500
+00:52:40.550 --> 00:52:42.530
+Sai Ram Vodnala: Then. Still, it's not normal.
+
+501
+00:52:42.670 --> 00:52:45.840
+Sai Ram Vodnala: Then we we are going to stop the process. Is it okay?
+
+502
+00:52:48.740 --> 00:52:53.179
+Bibek Adhikari: So what do you mean like? I will use the log transformation tool and.
+
+503
+00:52:53.420 --> 00:52:58.050
+Sai Ram Vodnala: Yeah, so I don't. I didn't understand why this Benjamin
+
+504
+00:52:58.220 --> 00:53:00.759
+Sai Ram Vodnala: is doing here this this work.
+
+505
+00:53:01.190 --> 00:53:03.928
+Bibek Adhikari: Actually, he had used the Benjamin Portsberg
+
+506
+00:53:05.390 --> 00:53:10.399
+Bibek Adhikari: equation for one of his videos. So I was trying to replicate that particular stuff.
+
+507
+00:53:11.050 --> 00:53:12.220
+Sai Ram Vodnala: But it's not coming.
+
+508
+00:53:12.580 --> 00:53:13.890
+Bibek Adhikari: Yeah, it's not giving any.
+
+509
+00:53:13.890 --> 00:53:16.830
+Sai Ram Vodnala: Okay, okay, okay, let it be. I will be doing it.
+
+510
+00:53:17.200 --> 00:53:18.010
+Sai Ram Vodnala: Wolf.
+
+511
+00:53:18.170 --> 00:53:20.010
+Sai Ram Vodnala: Okay, just a minute.
+
+512
+00:53:20.660 --> 00:53:22.960
+Sai Ram Vodnala: Are we removing? Removing this?
+
+513
+00:53:28.650 --> 00:53:30.700
+Sai Ram Vodnala: No, no, this one. This code
+
+514
+00:53:32.200 --> 00:53:36.530
+Sai Ram Vodnala: last code. So I will all add log transformation here. Is that okay?
+
+515
+00:53:36.830 --> 00:53:38.569
+Bibek Adhikari: Okay, yeah, that makes sense.
+
+516
+00:53:39.020 --> 00:53:42.120
+Bibek Adhikari: But what is the reason of adding block transformation.
+
+517
+00:53:42.120 --> 00:53:44.220
+Sai Ram Vodnala: Yeah, actually, we, we are changing the
+
+518
+00:53:45.210 --> 00:53:53.540
+Sai Ram Vodnala: we are changing the values of these variables, especially Dd, and Ud, because to show that
+
+519
+00:53:54.070 --> 00:53:55.799
+Sai Ram Vodnala: to prove it's normal.
+
+520
+00:53:57.240 --> 00:54:04.950
+Sai Ram Vodnala: So anyway, we have. We have seen after applying Fdr, still, it's normal. It's not normal. So we are trying with loud transformation.
+
+521
+00:54:09.030 --> 00:54:11.249
+Sai Ram Vodnala: Okay, I'll show you a long transformation.
+
+522
+00:54:18.200 --> 00:54:22.559
+Sai Ram Vodnala: So already, H. Model is already. It's stable.
+
+523
+00:54:23.220 --> 00:54:25.080
+Bibek Adhikari: It's not stable. So.
+
+524
+00:54:25.080 --> 00:54:26.080
+Sai Ram Vodnala: Not flexible.
+
+525
+00:54:26.080 --> 00:54:35.529
+Bibek Adhikari: No, it's not a stable man. He's not checking about stability or anything like that he's just looking for. If we will be applying the Fdr model Fdr. Correction or not.
+
+526
+00:54:36.637 --> 00:54:45.449
+Bibek Adhikari: Because as I recall, so actually, although S model seems can go back to my code.
+
+527
+00:54:45.780 --> 00:54:46.480
+Sai Ram Vodnala: Okay.
+
+528
+00:54:46.800 --> 00:54:51.900
+Bibek Adhikari: And I can show you how it's not stable, so can you scroll up to the Fdr.
+
+529
+00:54:52.020 --> 00:54:54.649
+Bibek Adhikari: I have to add results. I have to add results.
+
+530
+00:54:54.760 --> 00:55:01.129
+Bibek Adhikari: The earlier result. Where was that? No, not this one, above this one, above this one.
+
+531
+00:55:01.480 --> 00:55:03.490
+Sai Ram Vodnala: Okay, just a minute. I need to run all.
+
+532
+00:55:04.380 --> 00:55:05.659
+Bibek Adhikari: I think you already did.
+
+533
+00:55:05.790 --> 00:55:07.099
+Bibek Adhikari: Ran that right.
+
+534
+00:55:13.860 --> 00:55:14.500
+Sai Ram Vodnala: Okay.
+
+535
+00:55:14.500 --> 00:55:19.049
+Bibek Adhikari: Hold on so so can you go to the next page for this one.
+
+536
+00:55:19.570 --> 00:55:20.560
+Sai Ram Vodnala: Next page.
+
+537
+00:55:20.560 --> 00:55:27.169
+Bibek Adhikari: I mean, if you see the ads model for this one, yeah, can you see? Like, it's like 0 point 0 1
+
+538
+00:55:27.620 --> 00:55:28.360
+Bibek Adhikari: and
+
+539
+00:55:29.040 --> 00:55:35.010
+Bibek Adhikari: the other is 0 point 0 9 fdr. Corrected, adjusted P value. So how does it make sense like
+
+540
+00:55:35.590 --> 00:55:39.310
+Bibek Adhikari: the S model is stable? How can we say S. Model is stable at all.
+
+541
+00:55:41.980 --> 00:55:46.560
+Sai Ram Vodnala: Okay, let me check my white paper. I think it's I have written it. I guess.
+

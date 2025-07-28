@@ -1,0 +1,503 @@
+---
+title: "Project 1"
+author: "Bibek Adhikari, Sai Ram Vodnala"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Project Description
+
+We are interested in incorporating typing dynamics into our password based security system. See the included paper for additional background on this type of biometric research. In prior work (namely last semester) it was noted that a user’s typing dynamics change over time when they type a given passcode. We need to incorporate this information into the biometric system by finding a lower threshold (in terms of the number of times a person has typed a passcode in the past) with which we can start training the system.
+
+For this project you are given access to a group of 51 individuals who have typed a passcode for a specific system.
+
+The passcode used by this code is : \(.tie5Roanl\)
+
+Dr. Roy Maxian and colleagues recruited 51 subjects at CMU. Subjects completed 8 data collection sessions, with each session composed of 50 times of typing the above passcode. Each session was one day apart. There is additional details concerning the data collection in the included paper.
+
+FOR EACH SUBJECT, YOUR TASK IS TO FIND A SUBSET OF THEIR TYPING DATA THAT IS REPRESENTIVIE OF THE LEARNED TYPING BEHAVIOR.
+
+This problem is going to be broken into the 4 following data analysis components or tasks.
+
+[Sub-Task 1:] Develop a covariate that tells you the number of times a subject has typed the passcode in the past.
+
+[Sub-Task 2:] For each subject, build three appropriate regression models for the total UD, total DD, and total H times in terms of the number of times the passcode has been typed.
+
+[Sub-Task 3:] Use FDR’s to assess reasonableness of the normality assumptions of the residuals after fitting model for all subjects.
+
+[Sub-Task 4:] Draw conclusions and make recommendations based on your analysis.
+
+The results of your analysis should be presented in a short white paper and 15 to 30 minute powerpoint slide deck and presentation scheduled during the first week of February.
+
+
+
+# Task-1: Covariate development
+
+```{r}
+# Loading the passcode dataset
+Password_data <- read.csv("DSL-StrongPasswordData.csv", header = TRUE)
+head(Password_data)
+```
+
+
+```{r}
+#Creating a variable that counts total number of times a passcode has been typed by a subject and calculating the total time needed for hold, up-dwon and down-down time for each subject
+
+library(dplyr)
+Total_attempts <- Password_data |> 
+  group_by(subject) |>  # Group data by subject
+  mutate(typing_count = row_number(), # Create a new variable counting typing attempts
+         total_h_time = rowSums(across(starts_with("H."))), # Create total hold time
+         total_ud_time = rowSums(across(starts_with("UD."))), # Create totatl up-down time
+         total_dd_time = rowSums(across(starts_with("DD.")))) |> # Create totatl down-down time
+  ungroup()  # Ungroup
+```
+
+
+
+```{r}
+# Create a single graph with individual boxplots for specified subjects for EDA
+library(tidyverse)   
+library(lme4)
+library(ggpubr) 
+boxplot_plots <- ggarrange(
+  ggplot(Total_attempts %>% filter(subject %in% c("s002", "s020", "s040", "s057")),
+                        aes(x = as.factor(sessionIndex), y = total_ud_time, fill = subject)) + 
+  geom_boxplot(alpha = 0.5) + 
+  labs(x = "sessionIndex", y = "Total UD Time", title = "Total UD Time vs Subject") +
+  theme_minimal() + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.title = element_text(size = 10, face = "bold")),
+  
+  ggplot(Total_attempts %>% filter(subject %in% c("s002", "s020", "s040", "s057")),
+                        aes(x = as.factor(sessionIndex), y = total_dd_time, fill = subject)) + 
+  geom_boxplot(alpha = 0.5) + 
+  labs(x = "sessionIndex", y = "Total DD Time", title = "Total DD Time vs Subject") +
+  theme_minimal() + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.title = element_text(size = 10, face = "bold")),
+  
+  ggplot(Total_attempts %>% filter(subject %in% c("s002", "s020", "s040", "s057")),
+                        aes(x = as.factor(sessionIndex), y = total_h_time, fill = subject)) + 
+  geom_boxplot(alpha = 0.5) + 
+  labs(x = "sessionIndex", y = "Total H Time", title = "Total H Time vs Subject") +
+  theme_minimal() + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.title = element_text(size = 10, face = "bold")),
+  
+  ncol = 3 # Arrange in 3 columns
+)
+
+
+# Display the plot
+boxplot_plots
+```
+
+```{r}
+# Filtering the dataset to get only the top 20 passcode entries per session
+
+library(tidyr)
+model_data <- Total_attempts |> 
+  filter(rep >= 31)             # Filtering the dataset to get top 20 passcode entries in each session done by each subject
+```
+
+
+```{r}
+# EDA for filtered subjects
+boxplot_plots <- ggarrange(
+  ggplot(model_data %>% filter(subject %in% c("s002", "s020", "s040", "s057")),
+                        aes(x = as.factor(sessionIndex), y = total_ud_time, fill = subject)) + 
+  geom_boxplot(alpha = 0.5) + 
+  labs(x = "sessionIndex", y = "Total UD Time", title = "Total UD Time vs Subject") +
+  theme_minimal() + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.title = element_text(size = 10, face = "bold")),
+  
+  ggplot(model_data %>% filter(subject %in% c("s002", "s020", "s040", "s057")),
+                        aes(x = as.factor(sessionIndex), y = total_dd_time, fill = subject)) + 
+  geom_boxplot(alpha = 0.5) + 
+  labs(x = "sessionIndex", y = "Total DD Time", title = "Total DD Time vs Subject") +
+  theme_minimal() + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.title = element_text(size = 10, face = "bold")),
+  
+  ggplot(model_data %>% filter(subject %in% c("s002", "s020", "s040", "s057")),
+                        aes(x = as.factor(sessionIndex), y = total_h_time, fill = subject)) + 
+  geom_boxplot(alpha = 0.5) + 
+  labs(x = "sessionIndex", y = "Total H Time", title = "Total H Time vs Subject") +
+  theme_minimal() + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.title = element_text(size = 10, face = "bold")),
+  
+  ncol = 3 # Arrange in 3 columns
+)
+
+# Display the plot
+boxplot_plots
+```
+
+
+
+# Task-2: Building Regression Model
+
+##To build regression model we filtered the data and considered only the top twenty password typings of each subject for each session
+
+
+```{r}
+# Regression models for each subject to create variable that can be view as the amount of time needed to up, down and holding the keys to type the passcode
+# We used linear models
+models <- model_data |>
+  nest() |> # Nesting the data
+  mutate(
+    UD_model = map( # Fitting the linear model for up-down
+      data, # Subject are second level variable
+      ~ lm(total_ud_time ~ typing_count + sessionIndex, data = .x)), 
+    DD_model = map( # Fitting the linear model for down-down time
+      data, # Subject are second level variable
+      ~ lm(total_dd_time ~ typing_count + sessionIndex, data = .x)),
+    H_model = map( # Fitting the linear model for Holding
+      data, # Subject are second level variable
+      ~ lm(total_h_time ~ typing_count + sessionIndex, data = .x))) |>
+ mutate(
+    UD_model_summary = map(UD_model, summary),  # Get summary of UD_model
+    DD_model_summary = map(DD_model, summary),  # Get summary of DD_model
+    H_model_summary = map(H_model, summary)    # Get summary of H_model
+  )
+
+# Print the summaries
+cat("Summary for UD model:\n")
+models$UD_model_summary
+cat("Summary for DD model:\n")
+models$DD_model_summary
+cat("Summary for H model:\n")
+models$H_model_summary
+```
+
+
+
+# Task-3: Normality assesment
+
+```{r}
+# Define the subjects of interest
+selected_subjects <- c("s002", "s020", "s040", "s057")
+
+# Ensure 'subject' exists before filtering
+if (!"subject" %in% colnames(Total_attempts)) {
+  stop("Error: 'subject' column not found in Total_attempts.")
+}
+
+# Filter model_data for selected subjects
+model_data <- Total_attempts |> 
+  filter(subject %in% selected_subjects, rep >= 31)  # Keep only relevant subjects
+
+# Fit models individually for each subject
+filtered_models <- model_data %>%
+  group_by(subject) %>%  
+  nest() %>%
+  mutate(
+    UD_model = map(data, ~ lm(total_ud_time ~ typing_count + sessionIndex, data = .x)),  # Fit UD model
+    UD_residuals = map(UD_model, residuals),  # Extract UD residuals
+    UD_fitted = map(UD_model, fitted.values),  # Extract UD fitted values
+  DD_model = map(data, ~ lm(total_dd_time ~ typing_count + sessionIndex, data = .x)),  # Fit DD model
+    DD_residuals = map(DD_model, residuals),  # Extract DD residuals
+    DD_fitted = map(DD_model, fitted.values),  # Extract DD fitted values
+  H_model = map(data, ~ lm(total_h_time ~ typing_count + sessionIndex, data = .x)),  # Fit H model
+    H_residuals = map(H_model, residuals),  # Extract H residuals
+    H_fitted = map(H_model, fitted.values),  # Extract H fitted values
+    )
+```
+
+#QQ plot for UD model
+```{r}
+# Load necessary libraries
+library(dplyr)
+library(tidyr)
+library(purrr)
+
+# Open a plotting window with 4 panels (2x2)
+par(mfrow = c(2, 2), bg = "white", mar = c(4, 4, 2, 1))
+
+# Loop through each selected subject to create QQ plots
+for (subject in selected_subjects) {
+  
+  # Extract residuals for the current subject
+  residuals_UD <- unlist(filtered_models$UD_residuals[filtered_models$subject == subject])
+  
+  # Create QQ plot
+  qqnorm(residuals_UD,  
+         main = paste("QQ Plot for UD Model (", subject, ")", sep = ""),
+         xlab = "Theoretical Quantiles", ylab = "Sample Quantiles", 
+         pch = 1, cex = 0.6)  # Hollow circles with smaller size
+  
+  # Add a reference QQ line
+  qqline(residuals_UD, col = "red")
+}
+
+# Reset plotting window
+par(mfrow = c(1, 1))
+```
+
+
+#QQ plot for DD model
+```{r}
+# Open a plotting window with 4 panels (2x2)
+par(mfrow = c(2, 2), bg = "white", mar = c(4, 4, 2, 1))
+
+# Loop through each selected subject to create QQ plots
+for (subject in selected_subjects) {
+  
+  # Extract residuals for the current subject
+  residuals_DD <- unlist(filtered_models$DD_residuals[filtered_models$subject == subject])
+  
+  # Create QQ plot
+  qqnorm(residuals_DD,  
+         main = paste("QQ Plot for DD Model (", subject, ")", sep = ""),
+         xlab = "Theoretical Quantiles", ylab = "Sample Quantiles", 
+         pch = 1, cex = 0.6)  # Hollow circles with smaller size
+  
+  # Add a reference QQ line
+  qqline(residuals_DD, col = "red")
+}
+
+# Reset plotting window
+par(mfrow = c(1, 1))
+```
+
+
+
+##QQ plot for H model
+```{r}
+# Open a plotting window with 4 panels (2x2)
+par(mfrow = c(2, 2), bg = "white", mar = c(4, 4, 2, 1))
+
+# Loop through each selected subject to create QQ plots
+for (subject in selected_subjects) {
+  
+  # Extract residuals for the current subject
+  residuals_H <- unlist(filtered_models$H_residuals[filtered_models$subject == subject])
+  
+  # Create QQ plot
+  qqnorm(residuals_H,  
+         main = paste("QQ Plot for H Model (", subject, ")", sep = ""),
+         xlab = "Theoretical Quantiles", ylab = "Sample Quantiles", 
+         pch = 1, cex = 0.6)  # Hollow circles with smaller size
+  
+  # Add a reference QQ line
+  qqline(residuals_H, col = "red")
+}
+
+# Reset plotting window
+par(mfrow = c(1, 1))
+```
+
+
+
+#Residuals vs Fitted plot for UD
+```{r}
+# Open a plotting window with 4 panels (2x2)
+par(mfrow = c(2, 2), bg = "white", mar = c(4, 4, 2, 1))
+
+# Loop through each selected subject to create QQ plots
+for (subject in selected_subjects) {
+  
+  # Extract residuals for the current subject
+  fitted_values_UD <- unlist(filtered_models$UD_fitted[filtered_models$subject == subject])
+  
+  # Create the Residuals vs Fitted plot
+  plot(fitted_values_UD, residuals_UD, 
+       main = paste("UD Residuals vs Fitted for", subject), 
+       xlab = "Fitted Values", ylab = "Residuals", 
+       col = "blue", pch = 1, cex = 0.8)  # Hollow circles
+  
+  abline(h = 0, col = "red", lwd = 2)  # Add a horizontal reference line
+  grid()  # Add gridlines
+}
+
+# Reset plotting window
+par(mfrow = c(1, 1))
+```
+
+
+
+#Residuals vs Fitted plot for DD
+```{r}
+# Open a plotting window with 4 panels
+par(mfrow = c(2, 2), bg = "white", mar = c(4, 4, 2, 1))
+
+# Loop over the selected subjects to plot Residuals vs Fitted
+for (subject in selected_subjects) {
+  
+  # Extract residuals and fitted values for the current subject
+  fitted_values_DD <- unlist(filtered_models$DD_fitted[filtered_models$subject == subject])
+  
+  # Create the Residuals vs Fitted plot
+  plot(fitted_values_DD, residuals_DD, 
+       main = paste("DD Residuals vs Fitted for", subject), 
+       xlab = "Fitted Values", ylab = "Residuals", 
+       col = "blue", pch = 1, cex = 0.8)  # Hollow circles
+  
+  abline(h = 0, col = "red", lwd = 2)  # Add a horizontal reference line
+  grid()  # Add gridlines
+}
+
+# Reset plotting window
+par(mfrow = c(1, 1))
+```
+
+
+
+#Residuals vs Fitted plot for H
+```{r}
+# Open a plotting window with 4 panels
+par(mfrow = c(2, 2), bg = "white", mar = c(4, 4, 2, 1))
+
+# Loop over the selected subjects to plot Residuals vs Fitted
+for (subject in selected_subjects) {
+  
+  # Extract fitted values for the current subject
+    fitted_values_H <- unlist(filtered_models$H_fitted[filtered_models$subject == subject])
+  
+  # Create the Residuals vs Fitted plot
+  plot(fitted_values_H, residuals_H, 
+       main = paste("H Residuals vs Fitted for", subject), 
+       xlab = "Fitted Values", ylab = "Residuals", 
+       col = "blue", pch = 1, cex = 0.8)  # Hollow circles
+  
+  abline(h = 0, col = "red", lwd = 2)  # Add a horizontal reference line
+  grid()  # Add gridlines
+}
+
+# Reset plotting window
+par(mfrow = c(1, 1))
+```
+
+
+
+#Shapiro-Wilk Test for Normality Distribution
+```{r}
+# Perform Shapiro-Wilk test for UD, DD, and H models
+
+# Function to perform Shapiro-Wilk test for residuals
+perform_shapiro_test <- function(model_residuals, model_name, subject) {
+  shapiro_test <- shapiro.test(model_residuals)
+  return(data.frame(Subject = subject, Model = model_name, Statistic = shapiro_test$statistic, p_value = shapiro_test$p.value))
+}
+
+# UD Model - Shapiro-Wilk Test
+shapiro_results_UD <- lapply(selected_subjects, function(subject) {
+  residuals_UD <- unlist(filtered_models$UD_residuals[filtered_models$subject == subject])
+  perform_shapiro_test(residuals_UD, "UD", subject)
+})
+
+# DD Model - Shapiro-Wilk Test
+shapiro_results_DD <- lapply(selected_subjects, function(subject) {
+  residuals_DD <- unlist(filtered_models$DD_residuals[filtered_models$subject == subject])
+  perform_shapiro_test(residuals_DD, "DD", subject)
+})
+
+# H Model - Shapiro-Wilk Test
+shapiro_results_H <- lapply(selected_subjects, function(subject) {
+  residuals_H <- unlist(filtered_models$H_residuals[filtered_models$subject == subject])
+  perform_shapiro_test(residuals_H, "H", subject)
+})
+
+# Combine all Shapiro-Wilk results into one data frame
+shapiro_results_all_df <- do.call(rbind, c(shapiro_results_UD, shapiro_results_DD, shapiro_results_H))
+
+# View the Shapiro-Wilk test results for all models
+print(shapiro_results_all_df)
+```
+
+
+#False-Discovery Rate (FDR) - Benjamin-Hochberg
+```{r}
+# Apply FDR correction to the p-values using p.adjust() with method = "fdr"
+shapiro_results_all_df$fdr_adjusted_p_value <- p.adjust(shapiro_results_all_df$p_value, method = "fdr")
+
+# View the updated results with FDR adjusted p-values
+print(shapiro_results_all_df)
+```
+
+
+```{r}
+# Apply log transformation to UD and DD times (adding 1 to avoid log(0))
+Total_attemptsl <- Total_attempts %>%
+  mutate(
+    log_total_ud_time = log(total_ud_time + 1),
+    log_total_dd_time = log(total_dd_time + 1)
+  )
+
+```
+
+```{r}
+# Load necessary libraries
+library(dplyr)
+library(purrr)
+
+# Re-run regression models using log-transformed UD and DD times
+log_models <- Total_attemptsl %>%
+  group_by(subject) %>%
+  nest() %>%
+  mutate(
+    log_UD_model = map(data, ~ lm(log_total_ud_time ~ typing_count + sessionIndex, data = .x)), 
+    log_DD_model = map(data, ~ lm(log_total_dd_time ~ typing_count+ sessionIndex, data = .x))
+  )
+
+```
+
+```{r}
+# Function to perform Shapiro-Wilk test on residuals
+perform_shapiro_test <- function(residuals, model_name, subject) {
+  shapiro_test <- shapiro.test(residuals)
+  return(data.frame(Subject = subject, Model = model_name, Statistic = shapiro_test$statistic, P_Value = shapiro_test$p.value))
+}
+
+# Initialize list to store results
+log_shapiro_results_list <- list()
+
+# Loop through selected subjects and perform normality tests
+selected_subjects <- c("s002", "s020", "s040", "s057")
+
+for (subject in selected_subjects) {
+  
+  # Extract index of the subject in log_models
+  i <- which(log_models$subject == subject)
+  
+  # Extract residuals for log-transformed models
+  residuals_log_UD <- residuals(log_models$log_UD_model[[i]])
+  residuals_log_DD <- residuals(log_models$log_DD_model[[i]])
+  
+  # Perform Shapiro-Wilk test
+  log_shapiro_results_list[[paste0(subject, "_log_UD")]] <- perform_shapiro_test(residuals_log_UD, "Log_UD", subject)
+  log_shapiro_results_list[[paste0(subject, "_log_DD")]] <- perform_shapiro_test(residuals_log_DD, "Log_DD", subject)
+}
+
+# Combine results into a dataframe
+log_shapiro_results_df <- do.call(rbind, log_shapiro_results_list)
+
+# Apply FDR correction
+log_shapiro_results_df$FDR_Adjusted_P_Value <- p.adjust(log_shapiro_results_df$P_Value, method = "fdr")
+
+# View results
+print(log_shapiro_results_df)
+
+```
+
+
+
+
+
+
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+

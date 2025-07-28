@@ -1,0 +1,1055 @@
+---
+title: "Project3"
+author: "sai ram vodnala"
+date: "2025-04-05"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
+```{r}
+# Load required libraries
+library(dplyr)
+library(readr)
+
+# Load the dataset
+password_data <- read_csv("DSL-StrongPasswordData.csv")
+
+# View the first few rows
+head(password_data)
+
+# Check dimensions and structure
+dim(password_data)
+str(password_data)
+```
+
+```{r}
+# Load necessary libraries
+library(tidyverse)
+library(data.table)
+
+# Step 1.2: Filter to the best 10 typists from Project 1
+top_10_users <- c("s002", "s020", "s040", "s057", "s022", "s027", "s033", "s036", "s042", "s043")
+filtered_data <- password_data %>%
+  filter(subject %in% top_10_users)
+
+# Step 1.3: Create total timing features and typing count
+Total_attempts <- filtered_data %>%
+  group_by(subject) %>%
+  mutate(
+    typing_count = row_number(),
+    total_h_time = rowSums(across(starts_with("H.")), na.rm = TRUE),
+    total_ud_time = rowSums(across(starts_with("UD.")), na.rm = TRUE),
+    total_dd_time = rowSums(across(starts_with("DD.")), na.rm = TRUE)
+  ) %>%
+  ungroup()
+
+# Step 1.4: Add session_id
+Total_attempts <- Total_attempts %>%
+  mutate(session_id = paste(subject, sessionIndex, sep = "_")) %>%
+  arrange(subject, sessionIndex, rep)
+
+# Step 1.5: Select and organize features
+session_features <- Total_attempts %>%
+  dplyr::select(session_id, subject, rep, typing_count, total_h_time, total_ud_time, total_dd_time)
+
+
+```
+
+```{r}
+# Step 1.6: Function to reshape data up to a given number of reps
+create_session_matrix <- function(max_reps = 50) {
+  session_wide <- session_features %>%
+    filter(rep <= max_reps) %>%
+    mutate(rep = paste0("rep", rep)) %>%
+    pivot_wider(
+      names_from = rep,
+      values_from = c(typing_count, total_h_time, total_ud_time, total_dd_time),
+      names_sep = "_"
+    )
+  return(session_wide)
+}
+
+# Step 1.7: Create and save session datasets for 1 to 50 reps
+session_datasets <- list()
+for (r in 1:50) {
+  session_datasets[[r]] <- create_session_matrix(r)
+  saveRDS(session_datasets[[r]], paste0("session_data_rep_", r, ".rds"))
+}
+
+# Optionally, store the data as RDS for reuse
+for (r in 1:50) {
+  saveRDS(session_datasets[[r]], paste0("session_data_rep_", r, ".rds"))
+}
+```
+
+```{r}
+session_data_r1 <- create_session_matrix(1)
+View(session_data_r1)
+
+```
+
+Model Building and Evaluation using LDA
+
+```{r}
+library(caret)
+library(MASS)
+library(dplyr)
+library(tibble)
+```
+
+```{r}
+# Initialize results dataframe
+lda_results <- data.frame(
+  reps_used = integer(),
+  avg_accuracy = numeric(),
+  avg_confidence = numeric()
+)
+
+# Function to run LDA model for a given rep count
+run_lda_cv <- function(rep_n) {
+  # Load session dataset for that rep count
+  data <- readRDS(paste0("session_data_rep_", rep_n, ".rds"))
+  
+  # Drop session_id if it exists
+  if ("session_id" %in% names(data)) {
+    data <- dplyr::select(data, -session_id)
+  }
+  
+  # Convert subject to factor
+  data$subject <- as.factor(data$subject)
+  
+  # Setup cross-validation folds (5-fold CV)
+  set.seed(123)
+  folds <- createFolds(data$subject, k = 5, returnTrain = TRUE)
+  
+  accs <- c()
+  confs <- c()
+  
+  for (i in 1:5) {
+    train_idx <- folds[[i]]
+    train_data <- data[train_idx, ]
+    test_data <- data[-train_idx, ]
+    
+    # Train LDA model
+    lda_model <- lda(subject ~ ., data = train_data)
+    
+    # Predict
+    predictions <- predict(lda_model, newdata = test_data)
+    
+    # Accuracy
+    acc <- mean(predictions$class == test_data$subject)
+    accs <- c(accs, acc)
+    
+    # Confidence = mean of max posterior probabilities
+    max_conf <- apply(predictions$posterior, 1, max)
+    confs <- c(confs, mean(max_conf))
+  }
+  
+  # Return average metrics
+  return(list(
+    accuracy = mean(accs),
+    confidence = mean(confs)
+  ))
+}
+```
+
+```{r}
+# Run for reps 1 to 50
+for (r in 1:50) {
+  message("Running LDA for rep ", r)
+  result <- run_lda_cv(r)
+  
+  lda_results <- lda_results %>%
+    add_row(
+      reps_used = r,
+      avg_accuracy = result$accuracy,
+      avg_confidence = result$confidence
+    )
+}
+```
+
+```{r}
+# Save results
+write.csv(lda_results, "lda_results.csv", row.names = FALSE)
+```
+
+```{r}
+# Plot accuracy and confidence vs reps
+library(ggplot2)
+ggplot(lda_results, aes(x = reps_used)) +
+  geom_line(aes(y = avg_accuracy), color = "blue", size = 1.2) +
+  geom_line(aes(y = avg_confidence), color = "red", linetype = "dashed", size = 1.2) +
+  labs(title = "LDA Accuracy and Confidence vs Repetitions",
+       x = "Number of Repetitions Used",
+       y = "Value") +
+  theme_minimal() +
+  scale_y_continuous(sec.axis = sec_axis(~ ., name = "Confidence (Red)")) +
+  theme(legend.position = "none")
+
+```
+
+
+MClustDA
+```{r}
+library(mclust)
+library(dplyr)
+library(caret)
+library(tibble)
+```
+
+```{r}
+# Define reps you want to test
+reps_to_run <- c(1, 5, 10, 15, 20, 25, 30, 40, 50)
+
+# Initialize results dataframe
+mclust_results <- data.frame(
+  reps_used = integer(),
+  avg_accuracy = numeric(),
+  avg_confidence = numeric()
+)
+
+# Function for MclustDA CV
+run_mclustda_cv <- function(rep_n) {
+  data <- readRDS(paste0("session_data_rep_", rep_n, ".rds"))
+  
+  if ("session_id" %in% names(data)) {
+    data <- dplyr::select(data, -session_id)
+  }
+  
+  data$subject <- as.factor(data$subject)
+  
+  set.seed(123)
+  folds <- createFolds(data$subject, k = 5, returnTrain = TRUE)
+  
+  accs <- numeric(0)
+  confs <- numeric(0)
+  
+  for (i in 1:5) {
+    train_idx <- folds[[i]]
+    train_data <- data[train_idx, ]
+    test_data <- data[-train_idx, ]
+    
+    tryCatch({
+      m_model <- MclustDA(train_data[, -1], class = train_data$subject)
+      pred <- predict(m_model, newdata = test_data[, -1])
+      
+      acc <- mean(pred$classification == test_data$subject)
+      accs <- c(accs, acc)
+      
+      # Posterior confidence
+      max_conf <- apply(pred$z, 1, max)
+      confs <- c(confs, mean(max_conf))
+      
+    }, error = function(e) {
+      accs <- c(accs, NA_real_)
+      confs <- c(confs, NA_real_)
+    })
+  }
+  
+  return(list(
+    accuracy = mean(accs, na.rm = TRUE),
+    confidence = mean(confs, na.rm = TRUE)
+  ))
+}
+```
+
+```{r}
+# Loop over selected reps
+for (r in reps_to_run) {
+  message("Running MclustDA for rep ", r)
+  result <- run_mclustda_cv(r)
+  
+  mclust_results <- mclust_results %>%
+    add_row(
+      reps_used = r,
+      avg_accuracy = result$accuracy,
+      avg_confidence = result$confidence
+    )
+}
+
+# Save results
+write.csv(mclust_results, "mclustda_results.csv", row.names = FALSE)
+```
+
+```{r}
+# Plot
+ggplot(mclust_results, aes(x = reps_used)) +
+  geom_line(aes(y = avg_accuracy), color = "purple", size = 1.2) +
+  geom_line(aes(y = avg_confidence), color = "darkred", linetype = "dashed", size = 1.2) +
+  labs(title = "MclustDA Accuracy and Confidence vs Repetitions",
+       x = "Number of Repetitions Used",
+       y = "Value") +
+  theme_minimal() +
+  scale_y_continuous(sec.axis = sec_axis(~ ., name = "Confidence (Dark Red)")) +
+  theme(legend.position = "none")
+
+
+```
+
+Decision Tree
+```{r}
+library(rpart)
+library(caret)
+library(dplyr)
+library(tibble)
+
+```
+
+```{r}
+# Selected reps
+reps_to_run <- c(1, 5, 10, 15, 20, 25, 30, 40, 50)
+
+# Initialize results dataframe
+tree_results <- data.frame(
+  reps_used = integer(),
+  avg_accuracy = numeric(),
+  avg_confidence = numeric()
+)
+
+# Function to run Decision Tree with CV
+run_tree_cv <- function(rep_n) {
+  data <- readRDS(paste0("session_data_rep_", rep_n, ".rds"))
+  
+  if ("session_id" %in% names(data)) {
+    data <- dplyr::select(data, -session_id)
+  }
+  
+  data$subject <- as.factor(data$subject)
+  
+  set.seed(123)
+  folds <- createFolds(data$subject, k = 5, returnTrain = TRUE)
+  
+  accs <- numeric(0)
+  confs <- numeric(0)
+  
+  for (i in 1:5) {
+    train_idx <- folds[[i]]
+    train_data <- data[train_idx, ]
+    test_data <- data[-train_idx, ]
+    
+    tryCatch({
+      tree_model <- rpart(subject ~ ., data = train_data, method = "class")
+      pred_probs <- predict(tree_model, newdata = test_data, type = "prob")
+      pred_class <- predict(tree_model, newdata = test_data, type = "class")
+      
+      acc <- mean(pred_class == test_data$subject)
+      accs <- c(accs, acc)
+      
+      max_conf <- apply(pred_probs, 1, max)
+      confs <- c(confs, mean(max_conf))
+      
+    }, error = function(e) {
+      accs <- c(accs, NA_real_)
+      confs <- c(confs, NA_real_)
+    })
+  }
+  
+  return(list(
+    accuracy = mean(accs, na.rm = TRUE),
+    confidence = mean(confs, na.rm = TRUE)
+  ))
+}
+```
+
+```{r}
+# Run for each repetition level
+for (r in reps_to_run) {
+  message("Running Decision Tree for rep ", r)
+  result <- run_tree_cv(r)
+  
+  tree_results <- tree_results %>%
+    add_row(
+      reps_used = r,
+      avg_accuracy = result$accuracy,
+      avg_confidence = result$confidence
+    )
+}
+
+# Save results
+write.csv(tree_results, "decision_tree_results.csv", row.names = FALSE)
+```
+
+```{r}
+# Plot
+library(ggplot2)
+ggplot(tree_results, aes(x = reps_used)) +
+  geom_line(aes(y = avg_accuracy), color = "sienna", size = 1.2) +
+  geom_line(aes(y = avg_confidence), color = "darkorange", linetype = "dashed", size = 1.2) +
+  labs(title = "Decision Tree Accuracy and Confidence vs Repetitions",
+       x = "Number of Repetitions Used",
+       y = "Value") +
+  theme_minimal() +
+  scale_y_continuous(sec.axis = sec_axis(~ ., name = "Confidence (Orange)")) +
+  theme(legend.position = "none")
+
+```
+Random Forest
+```{r}
+library(randomForest)
+library(caret)
+library(dplyr)
+library(tibble)
+
+```
+
+```{r}
+# Define reps
+reps_to_run <- c(1, 5, 10, 15, 20, 25, 30, 40, 50)
+
+# Initialize results
+rf_results <- data.frame(
+  reps_used = integer(),
+  avg_accuracy = numeric(),
+  avg_confidence = numeric()
+)
+
+# RF function
+run_rf_cv <- function(rep_n) {
+  data <- readRDS(paste0("session_data_rep_", rep_n, ".rds"))
+  
+  if ("session_id" %in% names(data)) {
+    data <- dplyr::select(data, -session_id)
+  }
+  
+  data$subject <- as.factor(data$subject)
+  
+  set.seed(123)
+  folds <- createFolds(data$subject, k = 5, returnTrain = TRUE)
+  
+  accs <- numeric(0)
+  confs <- numeric(0)
+  
+  for (i in 1:5) {
+    train_idx <- folds[[i]]
+    train_data <- data[train_idx, ]
+    test_data <- data[-train_idx, ]
+    
+    tryCatch({
+      rf_model <- randomForest(subject ~ ., data = train_data, ntree = 100)
+      pred_class <- predict(rf_model, newdata = test_data)
+      pred_probs <- predict(rf_model, newdata = test_data, type = "prob")
+      
+      acc <- mean(pred_class == test_data$subject)
+      accs <- c(accs, acc)
+      
+      max_conf <- apply(pred_probs, 1, max)
+      confs <- c(confs, mean(max_conf))
+      
+    }, error = function(e) {
+      accs <- c(accs, NA_real_)
+      confs <- c(confs, NA_real_)
+    })
+  }
+  
+  return(list(
+    accuracy = mean(accs, na.rm = TRUE),
+    confidence = mean(confs, na.rm = TRUE)
+  ))
+}
+```
+
+```{r}
+# Run for each repetition
+for (r in reps_to_run) {
+  message("Running Random Forest for rep ", r)
+  result <- run_rf_cv(r)
+  
+  rf_results <- rf_results %>%
+    add_row(
+      reps_used = r,
+      avg_accuracy = result$accuracy,
+      avg_confidence = result$confidence
+    )
+}
+
+# Save results
+write.csv(rf_results, "random_forest_results.csv", row.names = FALSE)
+```
+
+```{r}
+# Plot results
+library(ggplot2)
+ggplot(rf_results, aes(x = reps_used)) +
+  geom_line(aes(y = avg_accuracy), color = "darkblue", size = 1.2) +
+  geom_line(aes(y = avg_confidence), color = "skyblue", linetype = "dashed", size = 1.2) +
+  labs(title = "Random Forest Accuracy and Confidence vs Repetitions",
+       x = "Number of Repetitions Used",
+       y = "Value") +
+  theme_minimal() +
+  scale_y_continuous(sec.axis = sec_axis(~ ., name = "Confidence (Sky Blue)")) +
+  theme(legend.position = "none")
+
+```
+XGBoost
+```{r}
+install.packages("xgboost")
+install.packages("Matrix")
+library(xgboost)
+library(Matrix)
+library(caret)
+library(dplyr)
+library(tibble)
+```
+```{r}
+# Define reps
+reps_to_run <- c(1, 5, 10, 15, 20, 25, 30, 40, 50)
+
+# Initialize results
+xgb_results <- data.frame(
+  reps_used = integer(),
+  avg_accuracy = numeric(),
+  avg_confidence = numeric()
+)
+
+# XGBoost CV function
+run_xgb_cv <- function(rep_n) {
+  data <- readRDS(paste0("session_data_rep_", rep_n, ".rds"))
+  
+  if ("session_id" %in% names(data)) {
+    data <- dplyr::select(data, -session_id)
+  }
+
+  data$subject <- as.factor(data$subject)
+  labels <- as.integer(data$subject) - 1  # convert to numeric (0 to 9)
+  
+  set.seed(123)
+  folds <- createFolds(labels, k = 5, returnTrain = TRUE)
+  
+  accs <- numeric(0)
+  confs <- numeric(0)
+  
+  for (i in 1:5) {
+    train_idx <- folds[[i]]
+    test_idx <- setdiff(1:nrow(data), train_idx)
+    
+    dtrain <- xgb.DMatrix(data = as.matrix(data[train_idx, -1]), label = labels[train_idx])
+    dtest <- xgb.DMatrix(data = as.matrix(data[test_idx, -1]), label = labels[test_idx])
+    
+    watchlist <- list(train = dtrain)
+    
+    xgb_model <- xgb.train(
+      data = dtrain,
+      objective = "multi:softprob",
+      num_class = length(unique(labels)),
+      nrounds = 50,
+      verbose = 0
+    )
+    
+    pred_probs <- predict(xgb_model, dtest)
+    pred_matrix <- matrix(pred_probs, nrow = length(pred_probs)/length(unique(labels)), byrow = TRUE)
+    pred_class <- max.col(pred_matrix) - 1
+    
+    acc <- mean(pred_class == labels[test_idx])
+    accs <- c(accs, acc)
+    
+    confs <- c(confs, mean(apply(pred_matrix, 1, max)))
+  }
+  
+  return(list(
+    accuracy = mean(accs, na.rm = TRUE),
+    confidence = mean(confs, na.rm = TRUE)
+  ))
+}
+
+# Run loop
+for (r in reps_to_run) {
+  message("Running XGBoost for rep ", r)
+  result <- run_xgb_cv(r)
+  
+  xgb_results <- xgb_results %>%
+    add_row(
+      reps_used = r,
+      avg_accuracy = result$accuracy,
+      avg_confidence = result$confidence
+    )
+}
+
+# Save results
+write.csv(xgb_results, "xgboost_results.csv", row.names = FALSE)
+
+# Plot
+ggplot(xgb_results, aes(x = reps_used)) +
+  geom_line(aes(y = avg_accuracy), color = "darkgreen", size = 1.2) +
+  geom_line(aes(y = avg_confidence), color = "lightgreen", linetype = "dashed", size = 1.2) +
+  labs(title = "XGBoost Accuracy and Confidence vs Repetitions",
+       x = "Number of Repetitions Used",
+       y = "Value") +
+  theme_minimal() +
+  scale_y_continuous(sec.axis = sec_axis(~ ., name = "Confidence (Light Green)")) +
+  theme(legend.position = "none")
+
+```
+
+SVM
+```{r}
+library(e1071)     # For SVM
+library(caret)
+library(dplyr)
+library(tibble)
+```
+
+```{r}
+# Define reps
+reps_to_run <- c(1, 5, 10, 15, 20, 25, 30, 40, 50)
+
+# Initialize results
+svm_results <- data.frame(
+  reps_used = integer(),
+  avg_accuracy = numeric(),
+  avg_confidence = numeric()
+)
+
+# SVM function
+run_svm_cv <- function(rep_n) {
+  data <- readRDS(paste0("session_data_rep_", rep_n, ".rds"))
+
+  if ("session_id" %in% names(data)) {
+    data <- dplyr::select(data, -session_id)
+  }
+
+  data$subject <- as.factor(data$subject)
+
+  set.seed(123)
+  folds <- createFolds(data$subject, k = 5, returnTrain = TRUE)
+
+  accs <- numeric(0)
+  confs <- numeric(0)
+
+  for (i in 1:5) {
+    train_idx <- folds[[i]]
+    train_data <- data[train_idx, ]
+    test_data <- data[-train_idx, ]
+
+    tryCatch({
+      svm_model <- svm(subject ~ ., data = train_data, kernel = "radial", probability = TRUE)
+      pred_class <- predict(svm_model, newdata = test_data, probability = TRUE)
+
+      acc <- mean(pred_class == test_data$subject)
+      accs <- c(accs, acc)
+
+      probs <- attr(pred_class, "probabilities")
+      if (!is.null(probs)) {
+        max_conf <- apply(probs, 1, max)
+        confs <- c(confs, mean(max_conf))
+      } else {
+        confs <- c(confs, NA_real_)
+      }
+
+    }, error = function(e) {
+      accs <- c(accs, NA_real_)
+      confs <- c(confs, NA_real_)
+    })
+  }
+
+  return(list(
+    accuracy = mean(accs, na.rm = TRUE),
+    confidence = mean(confs, na.rm = TRUE)
+  ))
+}
+```
+
+```{r}
+# Run loop
+for (r in reps_to_run) {
+  message("Running SVM for rep ", r)
+  result <- run_svm_cv(r)
+
+  svm_results <- svm_results %>%
+    add_row(
+      reps_used = r,
+      avg_accuracy = result$accuracy,
+      avg_confidence = result$confidence
+    )
+}
+
+# Save results
+write.csv(svm_results, "svm_results.csv", row.names = FALSE)
+```
+
+```{r}
+# Plot
+library(ggplot2)
+ggplot(svm_results, aes(x = reps_used)) +
+  geom_line(aes(y = avg_accuracy), color = "black", size = 1.2) +
+  geom_line(aes(y = avg_confidence), color = "grey40", linetype = "dashed", size = 1.2) +
+  labs(title = "SVM Accuracy and Confidence vs Repetitions",
+       x = "Number of Repetitions Used",
+       y = "Value") +
+  theme_minimal() +
+  scale_y_continuous(sec.axis = sec_axis(~ ., name = "Confidence (Gray)")) +
+  theme(legend.position = "none")
+
+```
+FULL FEATURES APPROACH
+
+```{r}
+# Load libraries
+library(tidyverse)
+library(data.table)
+
+# Step 1.1: Load the original DSL dataset
+password_data <- read.csv("DSL-StrongPasswordData.csv")
+
+# Step 1.2: Filter to top 10 typists
+top_10_users <- c("s002", "s020", "s040", "s057", "s022", "s027", "s033", "s036", "s042", "s043")
+filtered_data <- password_data %>%
+  filter(subject %in% top_10_users)
+
+# Step 1.3: Create typing totals and session ID
+Total_attempts <- filtered_data %>%
+  group_by(subject) %>%
+  mutate(
+    typing_count = row_number(),
+    total_h_time = rowSums(across(starts_with("H.")), na.rm = TRUE),
+    total_ud_time = rowSums(across(starts_with("UD.")), na.rm = TRUE),
+    total_dd_time = rowSums(across(starts_with("DD.")), na.rm = TRUE)
+  ) %>%
+  ungroup() %>%
+  mutate(session_id = paste(subject, sessionIndex, sep = "_")) %>%
+  arrange(subject, sessionIndex, rep)
+
+# Step 1.4: Define which reps to process
+reps_to_run <- c(1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50)
+
+# Step 1.5: Function to build session-level data with full features
+create_full_feature_sessions <- function(max_reps = 50) {
+  session_data <- Total_attempts %>%
+    filter(rep <= max_reps) %>%
+    mutate(rep = paste0("rep", rep)) %>%
+    pivot_wider(
+      names_from = rep,
+      values_from = c(starts_with("H."), starts_with("UD."), starts_with("DD."),
+                      typing_count, total_h_time, total_ud_time, total_dd_time),
+      names_sep = "_"
+    )
+  return(session_data)
+}
+
+# Step 1.6: Build and save new session .rds files
+for (r in reps_to_run) {
+  session_data <- create_full_feature_sessions(r)
+  saveRDS(session_data, paste0("session_data_full_rep_", r, ".rds"))
+}
+
+```
+
+```{r}
+session_data_r2 <- create_full_feature_sessions(2)
+View(session_data_r2)
+
+```
+
+```{r}
+library(randomForest)
+library(caret)
+library(dplyr)
+library(tibble)
+
+```
+
+```{r}
+# Define reps to use
+reps_to_run <- c(1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50)
+
+# Initialize results storage
+rf_full_results <- data.frame(
+  reps_used = integer(),
+  avg_accuracy = numeric(),
+  avg_confidence = numeric()
+)
+
+# Random Forest CV function using full feature dataset
+run_rf_full_cv <- function(rep_n) {
+  data <- readRDS(paste0("session_data_full_rep_", rep_n, ".rds"))
+
+  if ("session_id" %in% names(data)) {
+    data <- dplyr::select(data, -session_id)
+  }
+
+  data$subject <- as.factor(data$subject)
+
+  set.seed(123)
+  folds <- createFolds(data$subject, k = 5, returnTrain = TRUE)
+
+  accs <- numeric(0)
+  confs <- numeric(0)
+
+  for (i in 1:5) {
+    train_idx <- folds[[i]]
+    train_data <- data[train_idx, ]
+    test_data <- data[-train_idx, ]
+
+    tryCatch({
+      rf_model <- randomForest(subject ~ ., data = train_data, ntree = 100)
+      pred_class <- predict(rf_model, newdata = test_data)
+      pred_probs <- predict(rf_model, newdata = test_data, type = "prob")
+
+      acc <- mean(pred_class == test_data$subject)
+      accs <- c(accs, acc)
+
+      max_conf <- apply(pred_probs, 1, max)
+      confs <- c(confs, mean(max_conf))
+
+    }, error = function(e) {
+      accs <- c(accs, NA_real_)
+      confs <- c(confs, NA_real_)
+    })
+  }
+
+  return(list(
+    accuracy = mean(accs, na.rm = TRUE),
+    confidence = mean(confs, na.rm = TRUE)
+  ))
+}
+```
+
+```{r}
+# Run loop for selected reps
+for (r in reps_to_run) {
+  message("Running Random Forest (full features) for rep ", r)
+  result <- run_rf_full_cv(r)
+
+  rf_full_results <- rf_full_results %>%
+    add_row(
+      reps_used = r,
+      avg_accuracy = result$accuracy,
+      avg_confidence = result$confidence
+    )
+}
+
+# Save results
+write.csv(rf_full_results, "rf_full_features_results.csv", row.names = FALSE)
+```
+
+```{r}
+# Plot
+library(ggplot2)
+ggplot(rf_full_results, aes(x = reps_used)) +
+  geom_line(aes(y = avg_accuracy), color = "darkblue", size = 1.2) +
+  geom_line(aes(y = avg_confidence), color = "skyblue", linetype = "dashed", size = 1.2) +
+  labs(title = "Random Forest (Full Features) Accuracy & Confidence vs Repetitions",
+       x = "Number of Repetitions Used",
+       y = "Value") +
+  theme_minimal() +
+  scale_y_continuous(sec.axis = sec_axis(~ ., name = "Confidence (Sky Blue)")) +
+  theme(legend.position = "none")
+
+```
+XGBoost
+
+```{r}
+library(xgboost)
+library(Matrix)
+library(caret)
+library(dplyr)
+library(tibble)
+
+
+```
+
+```{r}
+# Define repetition levels
+reps_to_run <- c(1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50)
+
+# Initialize results
+xgb_full_results <- data.frame(
+  reps_used = integer(),
+  avg_accuracy = numeric(),
+  avg_confidence = numeric()
+)
+
+# XGBoost full feature CV function
+run_xgb_full_cv <- function(rep_n) {
+  data <- readRDS(paste0("session_data_full_rep_", rep_n, ".rds"))
+  
+  if ("session_id" %in% names(data)) {
+    data <- dplyr::select(data, -session_id)
+  }
+  
+  data$subject <- as.factor(data$subject)
+  labels <- as.integer(data$subject) - 1  # 0-based class labels
+
+  set.seed(123)
+  folds <- createFolds(labels, k = 5, returnTrain = TRUE)
+
+  accs <- numeric(0)
+  confs <- numeric(0)
+
+  for (i in 1:5) {
+    train_idx <- folds[[i]]
+    test_idx <- setdiff(1:nrow(data), train_idx)
+
+    dtrain <- xgb.DMatrix(data = as.matrix(data[train_idx, -1]), label = labels[train_idx])
+    dtest <- xgb.DMatrix(data = as.matrix(data[test_idx, -1]), label = labels[test_idx])
+
+    xgb_model <- xgb.train(
+      data = dtrain,
+      objective = "multi:softprob",
+      num_class = length(unique(labels)),
+      nrounds = 50,
+      verbose = 0
+    )
+
+    pred_probs <- predict(xgb_model, dtest)
+    pred_matrix <- matrix(pred_probs, nrow = length(pred_probs)/length(unique(labels)), byrow = TRUE)
+    pred_class <- max.col(pred_matrix) - 1
+
+    acc <- mean(pred_class == labels[test_idx])
+    accs <- c(accs, acc)
+
+    confs <- c(confs, mean(apply(pred_matrix, 1, max)))
+  }
+
+  return(list(
+    accuracy = mean(accs, na.rm = TRUE),
+    confidence = mean(confs, na.rm = TRUE)
+  ))
+}
+```
+
+```{r}
+# Loop through repetitions
+for (r in reps_to_run) {
+  message("Running XGBoost (full features) for rep ", r)
+  result <- run_xgb_full_cv(r)
+
+  xgb_full_results <- xgb_full_results %>%
+    add_row(
+      reps_used = r,
+      avg_accuracy = result$accuracy,
+      avg_confidence = result$confidence
+    )
+}
+
+# Save results
+write.csv(xgb_full_results, "xgboost_full_features_results.csv", row.names = FALSE)
+```
+
+```{r}
+# Plot
+library(ggplot2)
+ggplot(xgb_full_results, aes(x = reps_used)) +
+  geom_line(aes(y = avg_accuracy), color = "darkgreen", size = 1.2) +
+  geom_line(aes(y = avg_confidence), color = "lightgreen", linetype = "dashed", size = 1.2) +
+  labs(title = "XGBoost (Full Features) Accuracy & Confidence vs Repetitions",
+       x = "Number of Repetitions Used",
+       y = "Value") +
+  theme_minimal() +
+  scale_y_continuous(sec.axis = sec_axis(~ ., name = "Confidence (Light Green)")) +
+  theme(legend.position = "none")
+
+```
+MClustDA
+
+```{r}
+# Define reps to use
+reps_to_run <- c(1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50)
+
+# Initialize result storage
+mclust_full_results <- data.frame(
+  reps_used = integer(),
+  avg_accuracy = numeric(),
+  avg_confidence = numeric()
+)
+
+# MclustDA CV function for full feature set
+run_mclust_full_cv <- function(rep_n) {
+  data <- readRDS(paste0("session_data_full_rep_", rep_n, ".rds"))
+
+  if ("session_id" %in% names(data)) {
+    data <- dplyr::select(data, -session_id)
+  }
+
+  data$subject <- as.factor(data$subject)
+
+  set.seed(123)
+  folds <- createFolds(data$subject, k = 5, returnTrain = TRUE)
+
+  accs <- numeric(0)
+  confs <- numeric(0)
+
+  for (i in 1:5) {
+    train_idx <- folds[[i]]
+    train_data <- data[train_idx, ]
+    test_data <- data[-train_idx, ]
+
+    tryCatch({
+      m_model <- MclustDA(train_data[, -1], class = train_data$subject)
+      pred <- predict(m_model, newdata = test_data[, -1])
+
+      acc <- mean(pred$classification == test_data$subject)
+      accs <- c(accs, acc)
+
+      max_conf <- apply(pred$z, 1, max)
+      confs <- c(confs, mean(max_conf))
+
+    }, error = function(e) {
+      accs <- c(accs, NA_real_)
+      confs <- c(confs, NA_real_)
+    })
+  }
+
+  return(list(
+    accuracy = mean(accs, na.rm = TRUE),
+    confidence = mean(confs, na.rm = TRUE)
+  ))
+}
+```
+
+```{r}
+# Run loop for MclustDA
+for (r in reps_to_run) {
+  message("Running MclustDA (full features) for rep ", r)
+  result <- run_mclust_full_cv(r)
+
+  mclust_full_results <- mclust_full_results %>%
+    add_row(
+      reps_used = r,
+      avg_accuracy = result$accuracy,
+      avg_confidence = result$confidence
+    )
+}
+
+# Save results
+write.csv(mclust_full_results, "mclustda_full_features_results.csv", row.names = FALSE)
+```
+
+```{r}
+# Plot
+library(ggplot2)
+ggplot(mclust_full_results, aes(x = reps_used)) +
+  geom_line(aes(y = avg_accuracy), color = "purple", size = 1.2) +
+  geom_line(aes(y = avg_confidence), color = "darkred", linetype = "dashed", size = 1.2) +
+  labs(title = "MclustDA (Full Features) Accuracy & Confidence vs Repetitions",
+       x = "Number of Repetitions Used",
+       y = "Value") +
+  theme_minimal() +
+  scale_y_continuous(sec.axis = sec_axis(~ ., name = "Confidence (Dark Red)")) +
+  theme(legend.position = "none")
+
+```
+

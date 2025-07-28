@@ -1,0 +1,110 @@
+---
+title: "Stat 601 - Passcode Project 4"
+format: html
+editor: visual
+---
+
+# Project 4
+
+This is the final project for the Fall 2024, Modern Applied Statistics Class at South Dakota State University. This is a group project and you are required to present your results to Dr. Saunders and/or Clarissa Giefer; other PhD students or faculty involved with the data science and related programs may attend your groups presentation as well.
+
+# Instructions
+
+*We are interested in incorporating typing dynamics into our password based security system. See the paper "Comparing Anomaly-Detection Algorithms for Keystroke Dynamics*" *for additional background on this type of biometric research.* *One concern about this type of system is whether or not a user is consistent over time in how they type a given passcode.\
+*<https://www.cs.cmu.edu/~maxion/pubs/KillourhyMaxion09.pdf>
+
+You with your discussion group, you are expected to
+
+-   Prepare a 15-25 minute presentation.
+
+-   Explain the model building process.
+
+-   Provide your recommendations.
+
+-   Provide a short white paper of the problem background, the model building process, and your recommendations.
+
+-   Include annotated code that replicates your analysis.
+
+**MAKE SURE YOU PROPERLY REFERENCE ANY MATERIAL YOU USE IN THIS PROJECT-not doing this is an easy way to fail the project!!**
+
+*You and your group will present a 15-25 minute presentation over Zoom, the times will be scheduled according to a Doodle poll.*
+
+**Due Date:** During finals week, Dec 12-18, you and your group will select a time slot to give a presentation to the committee - please make sure to schedule around all of your group members' exams. The white paper, presentation slides, and code files are all due the evening before the Zoom presentation.
+
+# The Problem
+
+We are interested in incorporating typing dynamics into our password based security system. See the included paper for additional background on this type of biometric research. One concern about this type of system is whether or not a user is consistent over time in how they type a given passcode. For this project you are given access to a group of 51 individuals who have typed a passcode for a specific system.
+
+The passcode used by this code is : `.tie5Roanl`
+
+Dr. Roy Maxian and colleagues recruited 51 subjects at CMU. Subjects completed 8 data collection sessions, with each session composed of 50 times of typing the above passcode. Each session was one day apart. Additional details concerning the data collection can be found in the included paper.
+
+*YOUR TASK IN THE FINAL PROJECT IS TO USE THE METHODS LEARNED IN THIS CLASS TO EXPLORE THE CONJECTURE THAT A PERSON’S TYPING DYNAMICS CHANGES OVER TIME.*
+
+The problem is broken into the following data analysis components/tasks:
+
+-   **Task 1:** Perform an exploratory analysis of the provided dataset (DSL.StrongPasswordData.csv). This will include developing appropriate response variables that are relevant to the question of interest. For example - the total time it takes to type the passcode. You will need to justify the choice of the final summary statistic.
+
+-   **Task 2:** Perform a formal and appropriate statistical analysis of the dataset. This will necessarily include a reasonable presentation of the results of the formal inference.
+
+-   **Task 3:** Perform a post-hoc analysis, testing the assumptions of the models used in Task 2 and potentially pairwise comparisons that are deemed of interest.
+
+## Variables Recorded by the Keypad
+
+The keypad on which the code is entered records the following times:
+
+**H.period:** The amount of time that the "." is held down.\
+**DD.period.t:** The time between pressing down the "." key to the time to press down the "t" key.\
+**UD.period.t:** The time between the "." key coming up to the time to press down the "t" key.\
+**H.t:** The amount of time that the "t" is held down.\
+**DD.t.i:** The time between pressing down the "t" key to the time to press down the "i" key.\
+**UD.t.i:** The time between the "t" key coming up to the time to press down the "i" key.\
+**H.i:** The amount of time that the "i" is held down.\
+**DD.i.e:** The time between pressing down the "i" key to the time to press down the "e" key.\
+**UD.i.e:** The time between the "i" key coming up to the time to press down the "e" key.\
+**H.e:** The amount of time that the "e" is held down.\
+**DD.e.five:** The time between pressing down the "e" key to the time to press down the "5" key.\
+**UD.e.five:** The time between the "e" key coming up to the time to press down the "5" key.\
+**H.five:** The amount of time that the "5" is held down.\
+**DD.five.Shift.r:** The time between pressing down the "5" key to the time to press down the "shift+r" key combination.\
+**UD.five.Shift.r:** The time between the "5" key coming up to the time to press down the "shift+r" key combination.\
+**H.Shift.r:** The amount of time that the "shift+r" key combination is held down.\
+**DD.Shift.r.o:** The time between pressing down the "shift+r" key combination to the time to press down the "o" key.\
+**UD.Shift.r.o:** The time between the "shift+r" key combination coming up to the time to press down the "o" key.\
+**H.o:** The amount of time that the "o" is held down.\
+**DD.o.a:** The time between pressing down the "o" key to the time to press down the "a" key.\
+**UD.o.a:** The time between the "o" key coming up to the time to press down the "a" key.\
+**H.a:** The amount of time that the "a" is held down.\
+**DD.a.n:** The time between pressing down the "a" key to the time to press down the "n" key.\
+**UD.a.n:** The time between the "a" key coming up to the time to press down the "n" key.\
+**H.n:** The amount of time that the "n" is held down.\
+**DD.n.l:** The time between pressing down the "n" key to the time to press down the "l" key.\
+**UD.n.l:** The time between the "n" key coming up to the time to press down the "l" key.\
+**H.l:** The amount of time that the "l" is held down.\
+**DD.l.Return:** The time between pressing down the "l" key to the time to press down the "return" key.\
+**UD.l.Return:** The time between the "l" key coming up to the time to press down the "return" key.\
+**H.Return:** The amount of time that the "return" is held down.
+
+# Grading
+
+Your group's grade will be determined by the following components:
+
+1.  Your group presentation over Zoom. All members of the group are responsible for being able to discuss all aspects of the presentation, code, and paper.
+
+2.  The write-up of the methods you have used in building your models.
+
+3.  Your knowledge of the material in Stat 541, Stat 600, and the material covered to date in Stat 601.
+
+You will need to turn in the following three components (**associated with Parts 1, 2, and 3 above before your presentation to the to the instructor**):
+
+-   An annotated R-script that build your simulations and interpret your results.
+
+-   A write-up on the construction on your code (Whitepaper approx. 2 pages written text but more is fine as long as it is not overwhelming. Tables and plots do not count towards the total page count but put tables/figures at the end of the write up and reference forward to them.)
+
+-   A powerpoint presentation discussing the work you have done on the project.
+
+Do ask me (or the GTA) for help if you are having trouble.
+
+Good Luck
+
+-cps, clg

@@ -1,0 +1,691 @@
+---
+title: "Applied Statistics I"
+author: "Soniya Shahi,Kevin Osei-Onomah,Sai Ram Vodnala, Carlos Quevedo"
+date: "2024-10-06"
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+
+
+```{r}
+#UB1 case1 
+#Scenario 1
+library(parallel)
+
+C <- 50
+samp.size <- 200
+sim.size <- 2000
+
+# Using vectors to store
+storer.thetas <- numeric(sim.size)
+storer.ub1 <- numeric(sim.size)
+
+# Parallel processing by detecting all cores in the machine
+cl <- makeCluster(parallel::detectCores())
+
+# Export the necessary variables to the worker nodes
+clusterExport(cl, varlist = c("C", "samp.size"))
+
+# Parallel loop using parLapply to execute in multiple cores
+result_list <- parLapply(cl, 1:sim.size, function(iter) {
+  xdat.iter <- rmultinom(samp.size, 1, rep(1/C, C))
+  pw.dist <- as.vector(dist(t(xdat.iter)))
+  m.dat <- 1 * (pw.dist == 0)
+  theta.hat <- mean(m.dat)
+  
+  # ub1 calculation
+  ub1.iter <- theta.hat + 1.645 * sqrt((theta.hat * (1 - theta.hat)) / choose(samp.size, 2))
+  
+  return(c(theta.hat, ub1.iter))
+})
+
+# Close the cluster to avoid indefinite running
+stopCluster(cl)
+
+# Extracting thetas and ub1 values from the result list
+result_list <- do.call(rbind, result_list)
+
+storer.thetas <- result_list[, 1]
+storer.ub1 <- result_list[, 2]
+
+# Simulation estimate of the true RMP
+mean_thetas <- mean(storer.thetas)
+
+# Coverage probability
+prop_mean_thetas_lt_ub1 <- mean(mean(storer.thetas) < storer.ub1)
+
+# Printing the results
+cat("Simulation estimate of the true rmp for UB1 Case 1 Scenario 1:", mean_thetas, "\n")
+cat("Coverage probability:", prop_mean_thetas_lt_ub1, "\n")
+
+```
+```{r}
+#UB1 Case 1
+#Scenario 2
+library(parallel)
+
+C <- 50
+samp.size <- 2000
+sim.size <- 2000
+
+# Using vectors to store
+storer.thetas <- numeric(sim.size)
+storer.ub1 <- numeric(sim.size)
+
+# Parallel processing by detecting all cores in the machine
+cl <- makeCluster(parallel::detectCores())
+
+# Export the necessary variables to the worker nodes
+clusterExport(cl, varlist = c("C", "samp.size"))
+
+# Parallel loop using parLapply to execute in multiple cores
+result_list <- parLapply(cl, 1:sim.size, function(iter) {
+  xdat.iter <- rmultinom(samp.size, 1, rep(1/C, C))
+  pw.dist <- as.vector(dist(t(xdat.iter)))
+  m.dat <- 1 * (pw.dist == 0)
+  theta.hat <- mean(m.dat)
+  
+  # ub1 calculation
+  ub1.iter <- theta.hat + 1.645 * sqrt((theta.hat * (1 - theta.hat)) / choose(samp.size, 2))
+  
+  return(c(theta.hat, ub1.iter))
+})
+
+# Close the cluster to avoid indefinite running
+stopCluster(cl)
+
+# Extracting thetas and ub1 values from the result list
+result_list <- do.call(rbind, result_list)
+
+storer.thetas <- result_list[, 1]
+storer.ub1 <- result_list[, 2]
+
+# Simulation estimate of the true RMP
+mean_thetas <- mean(storer.thetas)
+
+# Coverage probability
+prop_mean_thetas_lt_ub1 <- mean(mean(storer.thetas) < storer.ub1)
+
+# Printing the results
+cat("Simulation estimate of the true rmp for UB1 Case 1 scenario 2:", mean_thetas, "\n")
+cat("Coverage probability:", prop_mean_thetas_lt_ub1, "\n")
+```
+
+```{r}
+#UB1 case 2
+#Scenario 1
+
+library(parallel)
+
+C <- 50
+samp.size <- 200
+sim.size <- 2000
+
+# Using vectors to store
+storer.thetas <- numeric(sim.size)
+storer.ub1 <- numeric(sim.size)
+
+# parallel processing by detecting all cores in the Machine
+cl <- makeCluster(parallel::detectCores())
+
+# Export necessary variables to the cluster nodes
+clusterExport(cl, varlist = c("C", "samp.size"))
+
+# Parallel loop using parLapply to execute in multiple cores
+# this has helped us to significantly reduce the execution time 
+result_list <- parLapply(cl,1:sim.size, function(iter) {
+  xdat.iter <- rmultinom(samp.size, 1, seq(1, C) / sum(seq(1, C)))
+  pw.dist <- as.vector(dist(t(xdat.iter)))
+  m.dat <- 1 * (pw.dist == 0)
+  theta.hat <- mean(m.dat)
+# ub1 calculation
+  ub1.iter <- theta.hat + 1.645 * sqrt((theta.hat * (1 - theta.hat)) / choose(samp.size, 2))
+  
+  return(c(theta.hat, ub1.iter))
+})
+
+# Close the cluster so that it does not continue for indefinite
+stopCluster(cl)
+
+# Extract thetas and ub1 values from the result list
+result_list <- do.call(rbind, result_list)
+
+storer.thetas <- result_list[, 1]
+storer.ub1 <- result_list[, 2]
+
+# Simulation estimate of the true RMP
+mean_thetas <- mean(storer.thetas)
+
+# coverage probability
+prop_mean_thetas_lt_ub1 <- mean(mean(storer.thetas) < storer.ub1)
+
+# Print the results
+cat("Simulation estimate of the true rmp for UB1 Case 2 Scenario 1:", mean_thetas, "\n")
+cat("Coverage probability:", prop_mean_thetas_lt_ub1, "\n")
+```
+
+```{r}
+#UB1 case2
+#Scenario 2
+
+library(parallel)
+
+C <- 50
+samp.size <- 2000
+sim.size <- 2000
+
+# Using vectors to store
+storer.thetas <- numeric(sim.size)
+storer.ub1 <- numeric(sim.size)
+
+# parallel processing by detecting all cores in the Machine
+cl <- makeCluster(parallel::detectCores())
+
+# Export necessary variables to the cluster nodes
+clusterExport(cl, varlist = c("C", "samp.size"))
+
+# Parallel loop using parLapply to execute in multiple cores
+# this has helped us to significantly reduce the execution time 
+result_list <- parLapply(cl,1:sim.size, function(iter) {
+  xdat.iter <- rmultinom(samp.size, 1, seq(1, C) / sum(seq(1, C)))
+  pw.dist <- as.vector(dist(t(xdat.iter)))
+  m.dat <- 1 * (pw.dist == 0)
+  theta.hat <- mean(m.dat)
+# ub1 calculation
+  ub1.iter <- theta.hat + 1.645 * sqrt((theta.hat * (1 - theta.hat)) / choose(samp.size, 2))
+  
+  return(c(theta.hat, ub1.iter))
+})
+
+# Close the cluster so that it does not continue for indefinite
+stopCluster(cl)
+
+# Extract thetas and ub1 values from the result list
+result_list <- do.call(rbind, result_list)
+
+storer.thetas <- result_list[, 1]
+storer.ub1 <- result_list[, 2]
+
+# Simulation estimate of the true RMP
+mean_thetas <- mean(storer.thetas)
+
+# coverage probability
+prop_mean_thetas_lt_ub1 <- mean(mean(storer.thetas) < storer.ub1)
+
+# Print the results
+cat("Simulation estimate of the true rmp for UB1 Case 2 Scenario 2:", mean_thetas, "\n")
+cat("Coverage probability:", prop_mean_thetas_lt_ub1, "\n")
+```
+
+```{r}
+#UB2 case1
+#Scenario 1
+library(parallel)
+
+C = 50
+samp.size = 200
+sim.size = 2000
+
+# Using vectors to store
+storer.thetas <- numeric(sim.size)
+storer.ub2 <- numeric(sim.size)
+
+# Parallel processing by detecting all cores in the machine
+cl <- makeCluster(parallel::detectCores())
+
+# Export the necessary variables to the worker nodes
+clusterExport(cl, varlist = c("C", "samp.size"))
+
+# Parallel loop using parLapply to execute in multiple cores
+result_list <- parLapply(cl, 1:sim.size, function(iter) {
+  xdat.iter <- rmultinom(samp.size, 1, rep(1/C, C))
+  pw.dist <- as.vector(dist(t(xdat.iter)))
+  m.dat <- 1 * (pw.dist == 0)
+  theta.hat <- mean(m.dat)
+  
+  # UB2 calculation
+  ub2.iter <- theta.hat + 1.645 * sqrt((theta.hat * (1 - theta.hat)) / (samp.size / 2))
+  
+  return(c(theta.hat, ub2.iter))
+})
+
+# Close the cluster
+stopCluster(cl)
+
+# Extract thetas and ub2 values from the result list
+result_list <- do.call(rbind, result_list)
+
+storer.thetas <- result_list[, 1]
+storer.ub2 <- result_list[, 2]
+
+# Simulation estimate of the true RMP
+mean_thetas <- mean(storer.thetas)
+
+# Coverage probability
+prop_mean_thetas_lt_ub2 <- mean(mean(storer.thetas) < storer.ub2)
+
+# Print the results
+cat("Simulation estimate of the true rmp for UB2 Case 1 Scenario 1:", mean_thetas, "\n")
+cat("Coverage probability:", prop_mean_thetas_lt_ub2, "\n")
+
+```
+
+```{r}
+#UB2 case1
+#Scenario 2
+library(parallel)
+
+C = 50
+samp.size = 2000
+sim.size = 2000
+
+# Using vectors to store
+storer.thetas <- numeric(sim.size)
+storer.ub2 <- numeric(sim.size)
+
+# Parallel processing by detecting all cores in the machine
+cl <- makeCluster(parallel::detectCores())
+
+# Export the necessary variables to the worker nodes
+clusterExport(cl, varlist = c("C", "samp.size"))
+
+# Parallel loop using parLapply to execute in multiple cores
+result_list <- parLapply(cl, 1:sim.size, function(iter) {
+  xdat.iter <- rmultinom(samp.size, 1, rep(1/C, C))
+  pw.dist <- as.vector(dist(t(xdat.iter)))
+  m.dat <- 1 * (pw.dist == 0)
+  theta.hat <- mean(m.dat)
+  
+  # UB2 calculation
+  ub2.iter <- theta.hat + 1.645 * sqrt((theta.hat * (1 - theta.hat)) / (samp.size / 2))
+  
+  return(c(theta.hat, ub2.iter))
+})
+
+# Close the cluster
+stopCluster(cl)
+
+# Extract thetas and ub2 values from the result list
+result_list <- do.call(rbind, result_list)
+
+storer.thetas <- result_list[, 1]
+storer.ub2 <- result_list[, 2]
+
+# Simulation estimate of the true RMP
+mean_thetas <- mean(storer.thetas)
+
+# Coverage probability
+prop_mean_thetas_lt_ub2 <- mean(mean(storer.thetas) < storer.ub2)
+
+# Print the results
+cat("Simulation estimate of the true rmp for UB2 Case 1 Scenario 2:", mean_thetas, "\n")
+cat("Coverage probability:", prop_mean_thetas_lt_ub2, "\n")
+
+```
+
+```{r}
+#UB2 case2
+#Scenario 1
+library(parallel)
+
+C <- 50
+samp.size <- 200
+sim.size <- 2000
+
+# Using vectors to store
+storer.thetas <- numeric(sim.size)
+storer.ub2 <- numeric(sim.size)
+
+# Detect the number of cores available and create a cluster
+cl <- makeCluster(parallel::detectCores())
+
+# Export necessary variables to the worker nodes
+clusterExport(cl, varlist = c("C", "samp.size"))
+
+# Parallel loop using parLapply to execute in multiple cores
+result_list <- parLapply(cl, 1:sim.size, function(iter) {
+  xdat.iter <- rmultinom(samp.size, 1, seq(1, C) / sum(seq(1, C)))
+  pw.dist <- as.vector(dist(t(xdat.iter)))
+  m.dat <- 1 * (pw.dist == 0)
+  theta.hat <- mean(m.dat)
+  
+  # ub2 calculation
+  ub2.iter <- theta.hat + 1.645 * sqrt((theta.hat * (1 - theta.hat)) / (samp.size / 2))
+  
+  return(c(theta.hat, ub2.iter))
+})
+
+# Close the cluster after computations are done
+stopCluster(cl)
+
+# Extract thetas and ub2 values from the result list
+result_list <- do.call(rbind, result_list)
+storer.thetas <- result_list[, 1]
+storer.ub2 <- result_list[, 2]
+
+# Simulation estimate of the true RMP
+mean_thetas <- mean(storer.thetas)
+
+# Coverage probability
+prop_mean_thetas_lt_ub2 <- mean(mean(storer.thetas) < storer.ub2)
+
+# Print the results
+cat("Simulation estimate of the true rmp for UB2 Case 2 Scenario 1:", mean_thetas, "\n")
+cat("Coverage probability:", prop_mean_thetas_lt_ub2, "\n")
+
+```
+
+```{r}
+#UB2 case2
+#Scenario 2
+library(parallel)
+
+C <- 50
+samp.size <- 2000
+sim.size <- 2000
+
+# Using vectors to store
+storer.thetas <- numeric(sim.size)
+storer.ub2 <- numeric(sim.size)
+
+# Detect the number of cores available and create a cluster
+cl <- makeCluster(parallel::detectCores())
+
+# Export necessary variables to the worker nodes
+clusterExport(cl, varlist = c("C", "samp.size"))
+
+# Parallel loop using parLapply to execute in multiple cores
+result_list <- parLapply(cl, 1:sim.size, function(iter) {
+  xdat.iter <- rmultinom(samp.size, 1, seq(1, C) / sum(seq(1, C)))
+  pw.dist <- as.vector(dist(t(xdat.iter)))
+  m.dat <- 1 * (pw.dist == 0)
+  theta.hat <- mean(m.dat)
+  
+  # ub2 calculation
+  ub2.iter <- theta.hat + 1.645 * sqrt((theta.hat * (1 - theta.hat)) / (samp.size / 2))
+  
+  return(c(theta.hat, ub2.iter))
+})
+
+# Close the cluster after computations are done
+stopCluster(cl)
+
+# Extract thetas and ub2 values from the result list
+result_list <- do.call(rbind, result_list)
+storer.thetas <- result_list[, 1]
+storer.ub2 <- result_list[, 2]
+
+# Simulation estimate of the true RMP
+mean_thetas <- mean(storer.thetas)
+
+# Coverage probability
+prop_mean_thetas_lt_ub2 <- mean(mean(storer.thetas) < storer.ub2)
+
+# Print the results
+cat("Simulation estimate of the true rmp for UB2 Case 2 Scenario 2", mean_thetas, "\n")
+cat("Coverage probability:", prop_mean_thetas_lt_ub2, "\n")
+```
+
+```{r}
+#UB3 case 1
+#Scenario 1
+library(parallel)
+
+C <- 50
+samp.size <- 200
+sim.size <- 2000
+
+# Using vectors to store
+storer.thetas_ub3 <- numeric(sim.size)
+storer.ub3 <- numeric(sim.size)
+
+# parallel processing by detecting all cores in the Machine
+cl <- makeCluster(parallel::detectCores())
+
+# Export the necessary variables and functions to the worker nodes
+clusterExport(cl, varlist = c("C", "samp.size"))
+
+# Parallel loop using parLapply to execute in multiple cores
+result_list <- parLapply(cl, 1:sim.size, function(iter) {
+  xdat.iter <- rmultinom(samp.size, 1, rep(1/C, C))
+  
+  # pairwise calculation as a matrix
+  distance_matrix <- as.matrix(dist(t(xdat.iter)))
+  
+  # Convert the distance matrix into a binary matrix
+  m.dat <- ifelse(distance_matrix == 0, 1, 0)
+  
+  # Calculate theta_i for all elements by vectorizing it
+  row_sum <- rowSums(m.dat)
+  diag_values <- diag(m.dat)
+  theta_i <- (row_sum - diag_values) / (samp.size - 1)
+  theta_n <- mean(theta_i)
+  rho_squared <- (1 / (samp.size - 1)) * sum((theta_i - theta_n) ^ 2)
+  
+  # UB3 calculation
+  ub3.iter <- theta_n + 1.645 * (2 * sqrt(rho_squared) / sqrt(samp.size))
+  
+  return(c(theta_n, ub3.iter))
+})
+
+# Close the cluster so that it does not continue indefinitely
+stopCluster(cl)
+
+# Extract thetas and ub3 values from the result list
+result_list <- do.call(rbind, result_list)
+
+storer.thetas_ub3 <- result_list[, 1]
+storer.ub3 <- result_list[, 2]
+
+# Simulation estimate of the true RMP
+mean_thetas_ub3 <- mean(storer.thetas_ub3)
+
+# Coverage probability
+prop_mean_thetas_ub3_lt_ub3 <- mean(mean(storer.thetas_ub3) < storer.ub3)
+
+# Print the results
+cat("Simulation estimate of the true RMP for UB3 Case 1 Scenario 1:", mean_thetas_ub3, "\n")
+cat("Coverage probability (UB3):", prop_mean_thetas_ub3_lt_ub3, "\n")
+
+```
+
+```{r}
+#UB3 case 1
+#Scenario 2
+library(parallel)
+
+C <- 50
+samp.size <- 2000
+sim.size <- 2000
+
+# Using vectors to store
+storer.thetas_ub3 <- numeric(sim.size)
+storer.ub3 <- numeric(sim.size)
+
+# parallel processing by detecting all cores in the Machine
+cl <- makeCluster(parallel::detectCores())
+
+# Export the necessary variables and functions to the worker nodes
+clusterExport(cl, varlist = c("C", "samp.size"))
+
+# Parallel loop using parLapply to execute in multiple cores
+result_list <- parLapply(cl, 1:sim.size, function(iter) {
+  xdat.iter <- rmultinom(samp.size, 1, rep(1/C, C))
+  
+  # pairwise calculation as a matrix
+  distance_matrix <- as.matrix(dist(t(xdat.iter)))
+  
+  # Convert the distance matrix into a binary matrix
+  m.dat <- ifelse(distance_matrix == 0, 1, 0)
+  
+  # Calculate theta_i for all elements by vectorizing it
+  row_sum <- rowSums(m.dat)
+  diag_values <- diag(m.dat)
+  theta_i <- (row_sum - diag_values) / (samp.size - 1)
+  theta_n <- mean(theta_i)
+  rho_squared <- (1 / (samp.size - 1)) * sum((theta_i - theta_n) ^ 2)
+  
+  # UB3 calculation
+  ub3.iter <- theta_n + 1.645 * (2 * sqrt(rho_squared) / sqrt(samp.size))
+  
+  return(c(theta_n, ub3.iter))
+})
+
+# Close the cluster so that it does not continue indefinitely
+stopCluster(cl)
+
+# Extract thetas and ub3 values from the result list
+result_list <- do.call(rbind, result_list)
+
+storer.thetas_ub3 <- result_list[, 1]
+storer.ub3 <- result_list[, 2]
+
+# Simulation estimate of the true RMP
+mean_thetas_ub3 <- mean(storer.thetas_ub3)
+
+# Coverage probability
+prop_mean_thetas_ub3_lt_ub3 <- mean(mean(storer.thetas_ub3) < storer.ub3)
+
+# Print the results
+cat("Simulation estimate of the true RMP for UB3 Case 1 Scenario 2:", mean_thetas_ub3, "\n")
+cat("Coverage probability (UB3):", prop_mean_thetas_ub3_lt_ub3, "\n")
+
+```
+
+
+```{r}
+#UB3 case 2
+#Scenario 1
+library(parallel)
+
+C <- 50
+samp.size <- 200
+sim.size <- 2000
+
+# Using vectors to store
+storer.thetas_ub3 <- numeric(sim.size)
+storer.ub3 <- numeric(sim.size)
+
+# Set up parallel processing by detecting all cores on the machine
+cl <- makeCluster(parallel::detectCores())
+
+# Export the necessary variables and functions to the worker nodes
+clusterExport(cl, varlist = c("C", "samp.size"))
+
+# Parallel loop using parLapply to execute in multiple cores
+# This has helped us to significantly reduce the execution time
+result_list <- parLapply(cl, 1:sim.size, function(iter) {
+  xdat.iter <- rmultinom(samp.size, 1, seq(1, C) / sum(seq(1, C)))
+  
+  # Pairwise calculation as a matrix
+  distance_matrix <- as.matrix(dist(t(xdat.iter)))
+  
+  # Convert the distance matrix into a binary matrix 
+  m.dat <- ifelse(distance_matrix == 0, 1, 0)
+  
+  # Calculate theta_i for all elements by vectorizing it
+  row_sum <- rowSums(m.dat)
+  diag_values <- diag(m.dat)
+  theta_i <- (row_sum - diag_values) / (samp.size - 1)
+  theta_n <- mean(theta_i)
+  
+  # Calculate rho_squared
+  rho_squared <- (1 / (samp.size - 1)) * sum((theta_i - theta_n) ^ 2)
+  
+  # UB3 calculation
+  ub3.iter <- theta_n + 1.645 * (2 * sqrt(rho_squared) / sqrt(samp.size))
+  
+  return(c(theta_n, ub3.iter))
+})
+
+# Close the cluster to prevent indefinite use of resources
+stopCluster(cl)
+
+# Extract thetas and ub3 values from the result list
+result_list <- do.call(rbind, result_list)
+
+storer.thetas_ub3 <- result_list[, 1]
+storer.ub3 <- result_list[, 2]
+
+# Simulation estimate of the true RMP
+mean_thetas_ub3 <- mean(storer.thetas_ub3)
+
+# Coverage probability
+prop_mean_thetas_ub3_lt_ub3 <- mean(mean(storer.thetas_ub3) < storer.ub3)
+
+# Print the results
+cat("Simulation estimate of the true RMP for UB3 Case 2 Scenario 1:", mean_thetas_ub3, "\n")
+cat("Coverage probability (UB3):", prop_mean_thetas_ub3_lt_ub3, "\n")
+
+```
+
+
+
+
+```{r}
+#UB3 case 2
+#Scenario 2
+library(parallel)
+
+C <- 50
+samp.size <- 2000
+sim.size <- 2000
+
+# Using vectors to store
+storer.thetas_ub3 <- numeric(sim.size)
+storer.ub3 <- numeric(sim.size)
+
+# Set up parallel processing by detecting all cores on the machine
+cl <- makeCluster(parallel::detectCores())
+
+# Export the necessary variables and functions to the worker nodes
+clusterExport(cl, varlist = c("C", "samp.size"))
+
+# Parallel loop using parLapply to execute in multiple cores
+# This has helped us to significantly reduce the execution time
+result_list <- parLapply(cl, 1:sim.size, function(iter) {
+  xdat.iter <- rmultinom(samp.size, 1, seq(1, C) / sum(seq(1, C)))
+  
+  # Pairwise calculation as a matrix
+  distance_matrix <- as.matrix(dist(t(xdat.iter)))
+  
+  # Convert the distance matrix into a binary matrix 
+  m.dat <- ifelse(distance_matrix == 0, 1, 0)
+  
+  # Calculate theta_i for all elements by vectorizing it
+  row_sum <- rowSums(m.dat)
+  diag_values <- diag(m.dat)
+  theta_i <- (row_sum - diag_values) / (samp.size - 1)
+  theta_n <- mean(theta_i)
+  
+  # Calculate rho_squared
+  rho_squared <- (1 / (samp.size - 1)) * sum((theta_i - theta_n) ^ 2)
+  
+  # UB3 calculation
+  ub3.iter <- theta_n + 1.645 * (2 * sqrt(rho_squared) / sqrt(samp.size))
+  
+  return(c(theta_n, ub3.iter))
+})
+
+# Close the cluster to prevent indefinite use of resources
+stopCluster(cl)
+
+# Extract thetas and ub3 values from the result list
+result_list <- do.call(rbind, result_list)
+
+storer.thetas_ub3 <- result_list[, 1]
+storer.ub3 <- result_list[, 2]
+
+# Simulation estimate of the true RMP
+mean_thetas_ub3 <- mean(storer.thetas_ub3)
+
+# Coverage probability
+prop_mean_thetas_ub3_lt_ub3 <- mean(mean(storer.thetas_ub3) < storer.ub3)
+
+# Print the results
+cat("Simulation estimate of the true RMP for UB3 Case 2 Scenario 2:", mean_thetas_ub3, "\n")
+cat("Coverage probability (UB3):", prop_mean_thetas_ub3_lt_ub3, "\n")
+
+```
